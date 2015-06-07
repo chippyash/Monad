@@ -14,13 +14,21 @@ namespace Monad;
  */
 interface Monadic
 {
-
     /**
      * Return value of Monad
+     * If value === \Monadic, will return its value, not the Monad
      *
      * @return mixed
      */
     public function get();
+
+    /**
+     * Return value of Monad as a base type.
+     * If value === \Closure, will evaluate the function and return it's value
+     *
+     * @return mixed
+     */
+    public function flatten();
 
     /**
      * Map monad with function.
@@ -36,6 +44,16 @@ interface Monadic
      * @return Monadic
      */
     public function map(\Closure $function, array $args = []);
+
+    /**
+     * Map then flatten
+     *
+     * @param callable $function
+     * @param array $args Optional additional arguments
+     *
+     * @return monadic
+     */
+    public function flatMap(\Closure $function, array $args = []);
 
     /**
      * Static factory creator for the Monad

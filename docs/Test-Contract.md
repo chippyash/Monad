@@ -2,16 +2,22 @@
 
 ## Monad\Test\Identity
 
-*  Get returns value when identity created with simple value
-*  Get returns value of bound monad when identity created with monadic value
 *  You can create an identity statically
 *  Creating an identity statically with an identity parameter will return the parameter
 *  You can map a function on an identity
 *  Map can take optional additional parameters
 *  Magic invoke proxies to map method if passed a closure
-*  Magic invoke proxies to get if passed no parameters
+*  Magic invoke proxies to get method if passed no parameters
 *  Calling magic invoke will throw exception if no method is executable
 *  You can chain map methods together
+*  Mapping on an identity with a closure value will evaluate the value
+
+## Monad\Test\Monad
+
+*  Get returns value when monad created with simple value
+*  Get returns bound monad when monad created with monadic value
+*  You can use a closure for value
+*  Flatten will return base type
 
 ## Monad\Test\None
 

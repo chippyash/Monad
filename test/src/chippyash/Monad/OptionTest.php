@@ -21,7 +21,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $value = $rProp->getValue($sut);
 
         $this->assertInstanceOf('Monad\Option\Some', $value);
-        $this->assertEquals('foo', $sut->get());
+        $this->assertEquals('foo', $sut->get()->get());
     }
 
     /**
@@ -35,7 +35,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $value = $rProp->getValue($sut);
 
         $this->assertInstanceOf('Monad\Option\None', $value);
-        $sut->get();
+        $sut->get()->get();
     }
 
     public function testCreatingWithAValueReturnsASome()

@@ -29,11 +29,27 @@ abstract class Monad implements Monadic
      */
     public function get()
     {
-        if ($this->value instanceof Monadic) {
-            return $this->value->get();
+        return $this->value;
+    }
+
+    /**
+     * Return value of Monad as a base type.
+     * If value === \Closure, will evaluate the function and return it's value
+     * If value === \Monadic, will return its value, not the Monad
+     *
+     * @return mixed
+     */
+    public function flatten()
+    {
+        $val = $this->get();
+        if ($val instanceof \Closure) {
+            return $val();
+        }
+        if ($val instanceof Monadic) {
+            return $val->flatten();
         }
 
-        return $this->value;
+        return $val;
     }
 
     /**
@@ -49,6 +65,19 @@ abstract class Monad implements Monadic
     public function map(\Closure $function, array $args = [])
     {
         return $this::create($this->callFunction($function, $this->value, $args));
+    }
+
+    /**
+     * Map then flatten
+     *
+     * @param callable $function
+     * @param array $args Optional additional arguments
+     *
+     * @return monadic
+     */
+    public function flatMap(\Closure $function, array $args = [])
+    {
+        return $this->map($function, $args)->flatten();
     }
 
     /**
@@ -104,7 +133,12 @@ abstract class Monad implements Monadic
         if ($value instanceof Monadic) {
             return $value->map($function, $args);
         }
-        array_unshift($args, $value);
+        if ($value instanceof \Closure) {
+            $val = $value();
+        } else {
+            $val = $value;
+        }
+        array_unshift($args, $val);
         return call_user_func_array($function, $args);
     }
 }

@@ -24,17 +24,6 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $this->sut = new Identity('foo');
     }
     
-    public function testGetReturnsValueWhenIdentityCreatedWithSimpleValue()
-    {
-        $this->assertEquals('foo', $this->sut->get());
-    }
-
-    public function testGetReturnsValueOfBoundMonadWhenIdentityCreatedWithMonadicValue()
-    {
-        $sut = new Identity($this->sut);
-        $this->assertEquals('foo', $sut->get());
-    }
-
     public function testYouCanCreateAnIdentityStatically()
     {
         $this->assertInstanceOf('Monad\Identity', Identity::create('bar'));
@@ -74,10 +63,9 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         };
         $sut = $this->sut;
         $this->assertEquals('foobar', $sut($func)->get());
-
     }
 
-    public function testMagicInvokeProxiesToGetIfPassedNoParameters()
+    public function testMagicInvokeProxiesToGetMethodIfPassedNoParameters()
     {
         $sut = $this->sut;
         $this->assertEquals('foo', $sut());
@@ -100,5 +88,15 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
             ->map(function($v, $n){return $v - $n;}, [2])
             ->get();
         $this->assertEquals(98, $val);
+    }
+
+
+    public function testMappingOnAnIdentityWithAClosureValueWillEvaluateTheValue()
+    {
+        $sut = new Identity(function(){return 'foo';});
+        $func = function ($value) {
+            return $value . 'bar';
+        };
+        $this->assertEquals('foobar', $sut($func)->get());
     }
 }

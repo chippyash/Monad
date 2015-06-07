@@ -3,7 +3,9 @@ title Monad classes
 
 interface Monadic {
     get():mixed
+    flatten():mixed
     map(Closure:function, array:args = []):monadic
+    flatMap(Closure:function, array:args = []):mixed
     {static} create(mixed:value):monadic
 }
 
