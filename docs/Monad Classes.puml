@@ -1,0 +1,39 @@
+@startuml
+title Monad classes
+
+interface Monadic {
+    get():mixed
+    map(Closure:function, array:args = []):monadic
+    {static} create(mixed:value):monadic
+}
+
+abstract class Monad {
+    __invoke()
+}
+
+class Identity {
+    __construct(mixed:value)
+}
+
+class Option {
+    __construct(mixed:value = null)
+    {static} create(mixed:value):monadic
+    {static} option(mixed:value, mixed:noneValue = null)
+}
+
+class None {
+    __construct(mixed:value = null)
+    map(Closure:function, array:args = []):None
+    get():RuntimeException
+}
+
+class Some {
+    __construct($value)
+}
+
+Monadic <-- Monad
+Monad <-- Identity
+Monad <-- Option
+Option <-- None
+Option <-- Some
+@enduml

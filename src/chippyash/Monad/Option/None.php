@@ -41,7 +41,7 @@ class None extends Option
      * @param \Closure $function Ignored
      * @param array $args Ignored
      *
-     * @return AbstractMonad
+     * @return None
      */
     public function map(\Closure $function, array $args = [])
     {

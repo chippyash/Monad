@@ -14,6 +14,7 @@ namespace Monad;
  */
 interface Monadic
 {
+
     /**
      * Return value of Monad
      *
@@ -39,7 +40,7 @@ interface Monadic
     /**
      * Static factory creator for the Monad
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return Monadic
      */
