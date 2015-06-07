@@ -44,16 +44,15 @@ strict or hard types as the uptake of my [strong-type library](https://packagist
 
 ## How
 
+@todo
 
 ## Further documentation
-
-You can find the [API documentation here](http://chippyash.github.io/Strong-Type)
 
 [Test Contract](https://github.com/chippyash/Monad/blob/master/docs/Test-Contract.md) in the docs directory.
 
 ### UML
 
-![class diagram](https://github.com/chippyash/Strong-Type/blob/master/docs/strong-type-class.png)
+@todo
 
 ## Changing the library
 
@@ -82,6 +81,8 @@ available at [Packagist.org](https://packagist.org/packages/chippyash/monad)
 Install [Composer](https://getcomposer.org/)
 
 #### For production
+
+We are still in pre production
 
 <pre>
     "chippyash/monad": "~1.0.0"
