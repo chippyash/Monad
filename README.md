@@ -52,7 +52,7 @@ strict or hard types as the uptake of my [strong-type library](https://packagist
 
 ### UML
 
-![class diagram](https://github.com/chippyash/Strong-Type/blob/master/docs/monad-classes.png)
+![class diagram](https://github.com/chippyash/Monad/blob/master/docs/monad-classes.png)
 
 ## Changing the library
 
