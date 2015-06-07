@@ -28,7 +28,7 @@ class None {
 }
 
 class Some {
-    __construct($value)
+    __construct(mixed:value)
 }
 
 Monadic <-- Monad
