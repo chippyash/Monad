@@ -4,7 +4,7 @@
 
 Certified for PHP 5.4+
 
-[![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Moand)
+[![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
 [![Coverage Status](https://coveralls.io/repos/chippyash/Monad/badge.png)](https://coveralls.io/r/chippyash/Monad)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
 
