@@ -1,0 +1,27 @@
+{
+    "name": "chippyash/monad",
+    "description": "Monad support for PHP",
+    "homepage" : "http://the-matrix.github.io/",
+    "license": "GPL 3.0",
+    "keywords": ["monad","identity","option","state","functional"],
+    "authors": [
+        {
+            "name": "Ashley Kitson",
+            "email": "ashley@zf4.biz"
+        }
+    ],
+    "require": {
+        "php":">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.3.0",
+        "codeclimate/php-test-reporter": "dev-master",
+        "satooshi/php-coveralls" : "~0.6.1"
+    },
+    "autoload": {
+        "psr-0": {
+          "Monad\\": "src\\chippyash"
+        }
+    }
+    
+}
