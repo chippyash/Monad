@@ -99,4 +99,22 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         };
         $this->assertEquals('foobar', $sut($func)->get());
     }
+
+    public function testYouCanFlattenAnIdentityValueToItsBaseType()
+    {
+        $sut = new Identity(function(){return 'foo';});
+        $func = function ($value) {
+            return $value . 'bar';
+        };
+        $this->assertEquals('foobar', $sut->map($func)->flatten());
+    }
+
+    public function testFlatmapIsSameAsCallingFlattenAfterMap()
+    {
+        $sut = new Identity(function(){return 'foo';});
+        $func = function ($value) {
+            return $value . 'bar';
+        };
+        $this->assertEquals('foobar', $sut->flatMap($func));
+    }
 }
