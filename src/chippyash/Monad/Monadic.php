@@ -16,22 +16,23 @@ interface Monadic
 {
     /**
      * Return value of Monad
-     * If value === \Monadic, will return its value, not the Monad
+     * Does not manipulate the value in any way
      *
      * @return mixed
      */
-    public function get();
+    public function value();
 
     /**
      * Return value of Monad as a base type.
      * If value === \Closure, will evaluate the function and return it's value
+     * If value === \Monadic, will recurse
      *
      * @return mixed
      */
     public function flatten();
 
     /**
-     * Map monad with function.
+     * Bind monad with function.
      *
      * Function is in form f($value) {}
      *
@@ -43,17 +44,7 @@ interface Monadic
      *
      * @return Monadic
      */
-    public function map(\Closure $function, array $args = []);
-
-    /**
-     * Map then flatten
-     *
-     * @param callable $function
-     * @param array $args Optional additional arguments
-     *
-     * @return monadic
-     */
-    public function flatMap(\Closure $function, array $args = []);
+    public function bind(\Closure $function, array $args = []);
 
     /**
      * Static factory creator for the Monad

@@ -24,23 +24,23 @@ class MonadTest extends \PHPUnit_Framework_TestCase
         $this->sut = $this->getMockForAbstractClass('Monad\Monad');
     }
 
-    public function testGetReturnsValueWhenMonadCreatedWithSimpleValue()
+    public function testYouCanReturnAValueWhenMonadCreatedWithSimpleValue()
     {
         $this->setSutValue('foo');
-        $this->assertEquals('foo', $this->sut->get());
+        $this->assertEquals('foo', $this->sut->value());
     }
 
-    public function testGetReturnsBoundMonadWhenMonadCreatedWithMonadicValue()
+    public function testYouCanReturnAValueWhenMonadCreatedWithMonadicValue()
     {
         $bound = $this->createMonadWithValue('foo');
         $this->setSutValue($bound);
-        $this->assertInstanceOf('Monad\Monadic', $this->sut->get());
+        $this->assertInstanceOf('Monad\Monadic', $this->sut->value());
     }
 
     public function testYouCanUseAClosureForValue()
     {
         $this->setSutValue(function(){return 'foo';});
-        $this->assertInstanceOf('Closure', $this->sut->get());
+        $this->assertInstanceOf('Closure', $this->sut->value());
     }
 
     public function testFlattenWillReturnBaseType()
@@ -53,8 +53,61 @@ class MonadTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->sut->flatten());
     }
 
+    public function testYouCanBindAClosureOnAMonadToCreateANewMonadOfTheSameType()
+    {
+        $this->setSutValue('foo');
+        $fn = function($value){return $value;};
+        $this->assertEquals(get_class($this->sut), get_class($this->sut->bind($fn)));
+
+        $this->setSutValue($this->createMonadWithValue('foo'));
+        $this->assertEquals(get_class($this->sut), get_class($this->sut->bind($fn)));
+
+        $this->setSutValue(function(){return 'foo';});
+        $this->assertEquals(get_class($this->sut), get_class($this->sut->bind($fn)));
+    }
+
+    public function testBindCanTakeOptionalAdditionalParameters()
+    {
+        $fn = function ($value, $fudge) {
+            return $value . $fudge;
+        };
+        $this->assertEquals(get_class($this->sut), get_class($this->sut->bind($fn, ['bar'])));
+    }
+
+    public function testMagicInvokeProxiesToBindMethodIfPassedAClosure()
+    {
+        $this->setSutValue('foo');
+        $fn = function ($value) {
+            return $value . 'bar';
+        };
+        $sut = $this->sut;
+        $this->assertEquals(get_class($sut), get_class($sut($fn)));
+    }
+
+    public function testMagicInvokeProxiesToValueMethodIfPassedNoParameters()
+    {
+        $this->setSutValue('foo');
+        $sut = $this->sut;
+        $this->assertEquals('foo', $sut());
+    }
+
     /**
-     * Set value on the Monad - Abstract Monad does not have a constructor
+     * @expectedException BadMethodCallException
+     */
+    public function testCallingMagicInvokeWillThrowExceptionIfNoMethodIsExecutable()
+    {
+        $sut = $this->sut;
+        $sut('foo');
+    }
+
+    public function testYouCannotCreateAnAbstractMonadStatically()
+    {
+        $refl = new \ReflectionClass('\Monad\Monad');
+        $this->assertNull($refl->getConstructor());
+    }
+
+    /**
+     * Set value on the Monad SUT - Abstract Monad does not have a constructor
      * @param $value
      */
     private function setSutValue($value)
@@ -64,6 +117,12 @@ class MonadTest extends \PHPUnit_Framework_TestCase
         $refl->setValue($this->sut, $value);
     }
 
+    /**
+     * Create a Mock Monad with a value
+     *
+     * @param mixed $value
+     * @return Monad Mock Monad
+     */
     private function createMonadWithValue($value)
     {
         $monad = $this->getMockForAbstractClass('Monad\Monad');

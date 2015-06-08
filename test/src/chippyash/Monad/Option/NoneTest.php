@@ -39,6 +39,6 @@ class NoneTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallingGetOnANoneThrowsARuntimeException()
     {
-        None::create()->get();
+        None::create()->value();
     }
 }

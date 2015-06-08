@@ -28,6 +28,6 @@ class SomeTest extends \PHPUnit_Framework_TestCase
 
     public function testYouCanGetAValueFromASome()
     {
-        $this->assertEquals('foo', (new Some('foo'))->get());
+        $this->assertEquals('foo', (new Some('foo'))->value());
     }
 }

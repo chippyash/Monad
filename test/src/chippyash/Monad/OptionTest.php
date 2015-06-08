@@ -13,30 +13,13 @@ use Monad\Option;
 
 class OptionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructionWithAValueProxiesASome()
+    public function testYouCannotConstructAnOptionDirectly()
     {
-        $sut = new Option('foo');
-        $rProp = new \ReflectionProperty($sut, 'value');
-        $rProp->setAccessible(true);
-        $value = $rProp->getValue($sut);
-
-        $this->assertInstanceOf('Monad\Option\Some', $value);
-        $this->assertEquals('foo', $sut->get()->get());
+        $refl = new \ReflectionClass('Monad\Option');
+        $this->assertNull($refl->getConstructor());
+        $this->assertTrue($refl->isAbstract());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testConstructionWithNoValueProxiesANone()
-    {
-        $sut = new Option();
-        $rProp = new \ReflectionProperty($sut, 'value');
-        $rProp->setAccessible(true);
-        $value = $rProp->getValue($sut);
-
-        $this->assertInstanceOf('Monad\Option\None', $value);
-        $sut->get()->get();
-    }
 
     public function testCreatingWithAValueReturnsASome()
     {
@@ -52,7 +35,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Option\None', $sut);
     }
 
-    public function testYouCanReplaceNoneTestByCallingOption()
+    public function testYouCanReplaceNoneTestByCallingCreateWithAdditionalParameter()
     {
         $sut = Option::option(true, false);
         $this->assertInstanceOf('Monad\Option\Some', $sut);

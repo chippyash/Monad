@@ -34,70 +34,46 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->sut, Identity::create($this->sut));
     }
 
-    public function testYouCanMapAFunctionOnAnIdentity()
+    public function testYouCanBindAFunctionOnAnIdentity()
     {
         $func = function ($value) {
             return $value . 'bar';
         };
-        $this->assertEquals('foobar', $this->sut->map($func)->get());
+        $this->assertEquals('foobar', $this->sut->bin($func)->value());
 
         $identity = new Identity($this->sut);
-        $this->assertEquals('foobar', $identity->map($func)->get());
+        $this->assertEquals('foobar', $identity->bin($func)->value());
     }
 
-    public function testMapCanTakeOptionalAdditionalParameters()
+    public function testBindCanTakeOptionalAdditionalParameters()
     {
         $func = function ($value, $fudge) {
             return $value . $fudge;
         };
-        $this->assertEquals('foobar', $this->sut->map($func, ['bar'])->get());
+        $this->assertEquals('foobar', $this->sut->bin($func, ['bar'])->value());
 
         $identity = new Identity($this->sut);
-        $this->assertEquals('foobar', $identity->map($func, ['bar'])->get());
+        $this->assertEquals('foobar', $identity->bin($func, ['bar'])->value());
     }
 
-    public function testMagicInvokeProxiesToMapMethodIfPassedAClosure()
-    {
-        $func = function ($value) {
-            return $value . 'bar';
-        };
-        $sut = $this->sut;
-        $this->assertEquals('foobar', $sut($func)->get());
-    }
-
-    public function testMagicInvokeProxiesToGetMethodIfPassedNoParameters()
-    {
-        $sut = $this->sut;
-        $this->assertEquals('foo', $sut());
-    }
-
-    /**
-     * @expectedException BadMethodCallException
-     */
-    public function testCallingMagicInvokeWillThrowExceptionIfNoMethodIsExecutable()
-    {
-        $sut = $this->sut;
-        $sut('foo');
-    }
-
-    public function testYouCanChainMapMethodsTogether()
+    public function testYouCanChainBindMethodsTogether()
     {
         $sut = new Identity(10);
         $val = $sut
-            ->map(function($v){return $v * 10;})
-            ->map(function($v, $n){return $v - $n;}, [2])
-            ->get();
+            ->bin(function($v){return $v * 10;})
+            ->bin(function($v, $n){return $v - $n;}, [2])
+            ->value();
         $this->assertEquals(98, $val);
     }
 
 
-    public function testMappingOnAnIdentityWithAClosureValueWillEvaluateTheValue()
+    public function testBindingOnAnIdentityWithAClosureValueWillEvaluateTheValue()
     {
         $sut = new Identity(function(){return 'foo';});
         $func = function ($value) {
             return $value . 'bar';
         };
-        $this->assertEquals('foobar', $sut($func)->get());
+        $this->assertEquals('foobar', $sut->bindd($func)->value());
     }
 
     public function testYouCanFlattenAnIdentityValueToItsBaseType()
@@ -106,15 +82,6 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $func = function ($value) {
             return $value . 'bar';
         };
-        $this->assertEquals('foobar', $sut->map($func)->flatten());
-    }
-
-    public function testFlatmapIsSameAsCallingFlattenAfterMap()
-    {
-        $sut = new Identity(function(){return 'foo';});
-        $func = function ($value) {
-            return $value . 'bar';
-        };
-        $this->assertEquals('foobar', $sut->flatMap($func));
+        $this->assertEquals('foobar', $sut->bind($func)->flatten());
     }
 }

@@ -24,10 +24,11 @@ abstract class Monad implements Monadic
 
     /**
      * Return value of Monad
+     * Does not manipulate the value in any way
      *
      * @return mixed
      */
-    public function get()
+    public function value()
     {
         return $this->value;
     }
@@ -41,7 +42,7 @@ abstract class Monad implements Monadic
      */
     public function flatten()
     {
-        $val = $this->get();
+        $val = $this->value();
         if ($val instanceof \Closure) {
             return $val();
         }
@@ -53,31 +54,18 @@ abstract class Monad implements Monadic
     }
 
     /**
-     * Map monad with function.  Function is in form f($value){}
+     * Bind monad with function.  Function is in form f($value){}
      * You can pass additional parameters in the $args array in which case your
      * function should be in the form f($value, $arg1, ..., $argN)
      *
      * @param \Closure $function
      * @param array $args additional arguments to pass to function
      *
-     * @return AbstractMonad
+     * @return Monadic
      */
-    public function map(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = [])
     {
         return $this::create($this->callFunction($function, $this->value, $args));
-    }
-
-    /**
-     * Map then flatten
-     *
-     * @param callable $function
-     * @param array $args Optional additional arguments
-     *
-     * @return monadic
-     */
-    public function flatMap(\Closure $function, array $args = [])
-    {
-        return $this->map($function, $args)->flatten();
     }
 
     /**
@@ -85,7 +73,7 @@ abstract class Monad implements Monadic
      *
      * @param $value
      *
-     * @return AbstractMonad
+     * @return Monadic
      */
     public static function create($value)
     {
@@ -99,25 +87,25 @@ abstract class Monad implements Monadic
     /**
      * Some syntactic sugar
      *
-     * Proxy to map() e.g. $ret = $foo(function($val){return $val * 2;});
-     * Proxy to get() e.g. $val = $foo();
+     * Proxy to bind() e.g. $ret = $foo(function($val){return $val * 2;});
+     * Proxy to value() e.g. $val = $foo();
      *
-     * @see map()
-     * @see get()
+     * @see bind()
+     * @see value()
      *
-     * @return mixed|AbstractMonad
+     * @return mixed|Monadic
      * @throw BadMethodCallException
      */
     public function __invoke()
     {
         if (func_num_args() == 0) {
-            return $this->get();
+            return $this->value();
         }
         if (func_get_arg(0) instanceof \Closure) {
-            return call_user_func_array(array($this, 'map'), func_get_args());
+            return call_user_func_array(array($this, 'bind'), func_get_args());
         }
 
-        throw new \BadMethodCallException('Invoke could not match get() or map()');
+        throw new \BadMethodCallException('Invoke could not match value() or bind()');
     }
 
     /**
@@ -127,11 +115,11 @@ abstract class Monad implements Monadic
      * @param mixed $value
      * @param array $args additional arguments to pass to function
      *
-     * @return AbstractMonad
+     * @return Monadic
      */
     protected function callFunction(\Closure $function, $value, array $args = []) {
         if ($value instanceof Monadic) {
-            return $value->map($function, $args);
+            return $value->bind($function, $args);
         }
         if ($value instanceof \Closure) {
             $val = $value();

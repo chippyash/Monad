@@ -25,4 +25,17 @@ class Some extends Option
     {
         $this->value = $value;
     }
+
+    /**
+     * Return Some or None as a result of bind
+     *
+     * @param \Closure $function Ignored
+     * @param array $args Ignored
+     *
+     * @return Some|None
+     */
+    public function bind(\Closure $function, array $args = [])
+    {
+
+    }
 }

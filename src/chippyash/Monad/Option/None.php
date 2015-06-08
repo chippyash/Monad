@@ -43,7 +43,7 @@ class None extends Option
      *
      * @return None
      */
-    public function map(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = [])
     {
         return new self();
     }
@@ -53,7 +53,7 @@ class None extends Option
      *
      * @throw \RuntimeException
      */
-    public function get()
+    public function value()
     {
         throw new \RuntimeException('None has no value');
     }

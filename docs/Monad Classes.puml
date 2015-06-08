@@ -2,7 +2,7 @@
 title Monad classes
 
 interface Monadic {
-    get():mixed
+    value():mixed
     flatten():mixed
     map(Closure:function, array:args = []):monadic
     flatMap(Closure:function, array:args = []):mixed
@@ -26,7 +26,7 @@ class Option {
 class None {
     __construct(mixed:value = null)
     map(Closure:function, array:args = []):None
-    get():RuntimeException
+    value():RuntimeException
 }
 
 class Some {
