@@ -29,7 +29,7 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 
 PHP is coming under increasing attack from functional hybrid languages such as Scala.
 The threat is real, with the ability of such languages to implement web applications
-using the `play` or `activator` framework.  The difference is the new buzzword of
+using the `play` framework.  The difference is the new buzzword of
 `functional programming`. PHP can support this paradigm, and this library introduces
 some basic monadic types.
 
