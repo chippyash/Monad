@@ -28,10 +28,9 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 ## Why?
 
 PHP is coming under increasing attack from functional hybrid languages such as Scala.
-The threat is real, with the ability of such languages to implement web applications
-using the `play` framework.  The difference is the new buzzword of
-`functional programming`. PHP can support this paradigm, and this library introduces
-some basic monadic types.
+The difference is the buzzword of `functional programming`. PHP can support this 
+paradigm, and this library introduces some basic monadic types. Indeed, learning
+functional programming practices can make solutions in PHP far more robust. 
 
 Much of the power of monadic types comes through the use of the functional Match, 
 For and Try language constructs.  PHP doesn't have these, and this library doesn't 
@@ -48,7 +47,7 @@ strict or hard types as the uptake of my [strong-type library](https://packagist
 
 A Monad has three things (according to my understanding of it):
 
-- a value (which may be no value at all)
+- a value (which may be no value at all, a simple type, an object or a function)
 - method of getting its value, often referred to as return()
 - a way of binding (or using) the value into some function, often refered to as  bind(), 
 the return value of which is another Monad, often but not always of the same type as 
@@ -64,7 +63,7 @@ Additionally, two helper methods are defined for the interface
 - flatten():mixed - the monadic value `flattened` to a PHP native type or non Monadic object
 - static create(mixed $value):Monadic A factory method to create an instance of the concrete descendant Monad
 
-General usage Monads have an immutable value, that is to say, the result of the bind()
+Monads have an immutable value, that is to say, the result of the bind()
 method is another (Monadic) class.  The original value is left alone
 
 ### The Monad Abstract class
@@ -74,8 +73,7 @@ proxies to value() if no parameters supplied or bind() if a Closure and optional
 are supplied.
 
 Neither the Monadic interface or the abstract Monad class define how to set a value on
-construction of a concrete Monad.  Ostensibly, you could use bind() to do this after
-construction, but it usually makes sense to set the Monad's value on construction.
+construction of a concrete Monad.  It usually makes sense to set the Monad's value on construction.
 Therefore in most circumstances you would create concrete Monad classes with some
 form of constructor.
  
