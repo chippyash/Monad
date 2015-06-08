@@ -37,9 +37,9 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 
     public function testYouCanReplaceNoneTestByCallingCreateWithAdditionalParameter()
     {
-        $sut = Option::option(true, false);
+        $sut = Option::create(true, false);
         $this->assertInstanceOf('Monad\Option\Some', $sut);
-        $sut1 = Option::option(false, false);
+        $sut1 = Option::create(false, false);
         $this->assertInstanceOf('Monad\Option\None', $sut1);
     }
 }

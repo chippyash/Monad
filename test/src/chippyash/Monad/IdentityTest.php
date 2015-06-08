@@ -39,10 +39,10 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $func = function ($value) {
             return $value . 'bar';
         };
-        $this->assertEquals('foobar', $this->sut->bin($func)->value());
+        $this->assertEquals('foobar', $this->sut->bind($func)->value());
 
         $identity = new Identity($this->sut);
-        $this->assertEquals('foobar', $identity->bin($func)->value());
+        $this->assertEquals('foobar', $identity->bind($func)->value());
     }
 
     public function testBindCanTakeOptionalAdditionalParameters()
@@ -50,18 +50,18 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $func = function ($value, $fudge) {
             return $value . $fudge;
         };
-        $this->assertEquals('foobar', $this->sut->bin($func, ['bar'])->value());
+        $this->assertEquals('foobar', $this->sut->bind($func, ['bar'])->value());
 
         $identity = new Identity($this->sut);
-        $this->assertEquals('foobar', $identity->bin($func, ['bar'])->value());
+        $this->assertEquals('foobar', $identity->bind($func, ['bar'])->value());
     }
 
     public function testYouCanChainBindMethodsTogether()
     {
         $sut = new Identity(10);
         $val = $sut
-            ->bin(function($v){return $v * 10;})
-            ->bin(function($v, $n){return $v - $n;}, [2])
+            ->bind(function($v){return $v * 10;})
+            ->bind(function($v, $n){return $v - $n;}, [2])
             ->value();
         $this->assertEquals(98, $val);
     }
@@ -73,7 +73,7 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $func = function ($value) {
             return $value . 'bar';
         };
-        $this->assertEquals('foobar', $sut->bindd($func)->value());
+        $this->assertEquals('foobar', $sut->bind($func)->value());
     }
 
     public function testYouCanFlattenAnIdentityValueToItsBaseType()
