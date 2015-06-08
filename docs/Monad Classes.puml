@@ -4,12 +4,12 @@ title Monad classes
 interface Monadic {
     value():mixed
     flatten():mixed
-    map(Closure:function, array:args = []):monadic
-    flatMap(Closure:function, array:args = []):mixed
+    bind(Closure:function, array:args = []):monadic
     {static} create(mixed:value):monadic
 }
 
 abstract class Monad {
+    #value:mixed
     __invoke()
 }
 
@@ -17,20 +17,20 @@ class Identity {
     __construct(mixed:value)
 }
 
-class Option {
-    __construct(mixed:value = null)
-    {static} create(mixed:value):monadic
-    {static} option(mixed:value, mixed:noneValue = null)
+abstract class Option {
+    {static} create(mixed:value):Some|None
 }
 
 class None {
     __construct(mixed:value = null)
-    map(Closure:function, array:args = []):None
     value():RuntimeException
+    bind(Closure:function, array:args = []):None
+    {static} create(mixed:value):None
 }
 
 class Some {
     __construct(mixed:value)
+    bind(Closure:function, array:args = []):Some|None
 }
 
 Monadic <-- Monad
