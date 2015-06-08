@@ -28,7 +28,7 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Option\None', None::create());
     }
 
-    public function testMappingANoneReturnsANone()
+    public function testBindingANoneReturnsANone()
     {
         $none = new None();
         $this->assertInstanceOf('Monad\Option\None', $none->bind(function(){}));

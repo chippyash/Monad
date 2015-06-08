@@ -18,7 +18,7 @@ class Identity {
 }
 
 abstract class Option {
-    {static} create(mixed:value):Some|None
+    {static} create(mixed:value, mixed:noneValue=null):Some|None
 }
 
 class None {
@@ -30,7 +30,7 @@ class None {
 
 class Some {
     __construct(mixed:value)
-    bind(Closure:function, array:args = []):Some|None
+    bind(Closure:function, array:args = [], mixed:noneValue=null):Some|None
 }
 
 Monadic <-- Monad

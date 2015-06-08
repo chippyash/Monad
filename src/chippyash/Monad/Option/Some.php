@@ -31,11 +31,13 @@ class Some extends Option
      *
      * @param \Closure $function Ignored
      * @param array $args Ignored
+     * @param mixed $noneValue Optional value to test for None
      *
      * @return Some|None
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = [], $noneValue = null)
     {
-
+        $a = func_get_args();
+        return Option::create($this->callFunction($function, $this->value, $args), $noneValue);
     }
 }

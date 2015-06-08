@@ -23,7 +23,7 @@ abstract class Option extends Monad
      * Proxy to option()
      *
      * @param mixed $value Value
-     * @param null $noneValue Optional value to test for None
+     * @param mixed $noneValue Optional value to test for None
      *
      * @return Some|None
      */
