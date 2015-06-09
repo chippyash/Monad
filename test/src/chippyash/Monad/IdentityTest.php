@@ -29,9 +29,20 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Identity', Identity::create('bar'));
     }
 
-    public function testCreatingAnIdentityStaticallyWithAnIdentityParameterWillReturnTheParameter()
+    public function testCreatingAnIdentityWithAnIdentityParameterWillReturnTheParameter()
     {
         $this->assertEquals($this->sut, Identity::create($this->sut));
+    }
+
+    public function testCreatingAnIdentityWithANonIdentityParameterWillReturnAnIdentityContainingTheParameterAsValue()
+    {
+        $sut = Identity::create('foo');
+        $this->assertInstanceOf('Monad\Identity', $sut);
+        $this->assertEquals('foo', $sut->value());
+
+        $sut1 = Identity::create(function($a){return $a;});
+        $this->assertInstanceOf('Monad\Identity', $sut1);
+        $this->assertInstanceOf('Closure', $sut1->value());
     }
 
     public function testYouCanBindAFunctionOnAnIdentity()
