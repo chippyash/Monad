@@ -37,7 +37,7 @@ class Match {
     #mixed:value
     #bool:isMatched
     __construct(mixed:value, bool:isMatched)
-    on(mixed:value):Match
+    {static} on(mixed:value):Match
     __call(string:method, array:args=[]):Match
 }
 
