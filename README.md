@@ -56,6 +56,16 @@ the donor Monad. (Rarely, it could be another class type.)
 The Monadic Interface supplied here defines
 
 - bind(\Closure $function, array $args = []):Monadic
+  - The function signature should contain at least one parameter to receive the value
+   of the Monad. e.g. `function($val){return $val * 2;}` If you are using additional
+   arguments in the $args array, you'll need to add them to the parameter list e.g.
+<pre>
+$ret = $m->bind(function($val, $mult){return $val * $mult;}, [4]);
+</pre>
+  Bear in mind that you can use the `use` clause as normal when defining your function 
+    to expose external parameter values
+    
+    
 - value():mixed - the return() method as `return` is a reserved word in PHP
 
 Additionally, two helper methods are defined for the interface
