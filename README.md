@@ -182,7 +182,7 @@ $result = Match::on($initialValue)
             ->value();
 </pre>
 
-where test() can the name of a native PHP type or the name of a class, e.g.:
+where test() can be the name of a native PHP type or the name of a class, e.g.:
 
 <pre>
 $result = Match::on($initialValue)
