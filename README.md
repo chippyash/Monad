@@ -103,10 +103,8 @@ $fConcat = function($value, $fudge){return $value . $fudge};
 $concat = $id->bind($fConcat, ['bar])
              ->bind($fConcat, ['baz']);
 
-echo $concat->flatten();    //'foobarbaz'
-var_dump($concat->value()); //will dump nested Identity class definitions with closures as value
+echo $concat->value();      //'foobarbaz'
 echo $id->value();          //'foo'
-echo $id->flatten();        //'foo'
 </pre>
 
 #### Option
