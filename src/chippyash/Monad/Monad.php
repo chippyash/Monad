@@ -17,41 +17,9 @@ namespace Monad;
  */
 abstract class Monad implements Monadic
 {
-    /**
-     * @var mixed
-     */
-    protected $value;
-
-    /**
-     * Return value of Monad
-     * Does not manipulate the value in any way
-     *
-     * @return mixed
-     */
-    public function value()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Return value of Monad as a base type.
-     * If value === \Closure, will evaluate the function and return it's value
-     * If value === \Monadic, will return its value, not the Monad
-     *
-     * @return mixed
-     */
-    public function flatten()
-    {
-        $val = $this->value();
-        if ($val instanceof \Closure) {
-            return $val();
-        }
-        if ($val instanceof Monadic) {
-            return $val->flatten();
-        }
-
-        return $val;
-    }
+    use CallFunctionAble;
+    use FlattenAble;
+    use ReturnValueAble;
 
     /**
      * Bind monad with function.  Function is in form f($value){}
@@ -106,27 +74,5 @@ abstract class Monad implements Monadic
         }
 
         throw new \BadMethodCallException('Invoke could not match value() or bind()');
-    }
-
-    /**
-     * Call function on value
-     *
-     * @param \Closure $function
-     * @param mixed $value
-     * @param array $args additional arguments to pass to function
-     *
-     * @return Monadic
-     */
-    protected function callFunction(\Closure $function, $value, array $args = []) {
-        if ($value instanceof Monadic) {
-            return $value->bind($function, $args);
-        }
-        if ($value instanceof \Closure) {
-            $val = $value();
-        } else {
-            $val = $value;
-        }
-        array_unshift($args, $val);
-        return call_user_func_array($function, $args);
     }
 }

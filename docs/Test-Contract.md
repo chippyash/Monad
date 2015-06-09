@@ -3,12 +3,28 @@
 ## Monad\Test\Identity
 
 *  You can create an identity statically
-*  Creating an identity statically with an identity parameter will return the parameter
+*  Creating an identity with an identity parameter will return the parameter
+*  Creating an identity with a non identity parameter will return an identity containing the parameter as value
 *  You can bind a function on an identity
 *  Bind can take optional additional parameters
 *  You can chain bind methods together
 *  Binding on an identity with a closure value will evaluate the value
 *  You can flatten an identity value to its base type
+
+## Monad\Test\Match
+
+*  Construction requires a value to match against
+*  You can construct via static on factory method
+*  You can match on native php types
+*  Matching will return set by callable parameter if matched
+*  Matching will return set by non callable parameter if matched
+*  Failing to match will return new match object with same value as original
+*  You can match on a class name
+*  Failing to match on class name will return new match object with same value as original
+*  You can chain match tests
+*  You can chain match tests and bind a function on successful match
+*  Binding a match will return a match
+*  You can nest matches
 
 ## Monad\Test\Monad
 

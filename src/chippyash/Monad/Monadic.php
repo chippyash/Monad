@@ -39,7 +39,7 @@ interface Monadic
      * You can pass additional parameters in the $args array in which case your
      * function should be in the form f($value, $arg1, ..., $argN) {}
      *
-     * @param Closure $function
+     * @param \Closure $function
      * @param array $args additional arguments to pass to function
      *
      * @return Monadic

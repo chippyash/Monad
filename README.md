@@ -33,8 +33,11 @@ paradigm, and this library introduces some basic monadic types. Indeed, learning
 functional programming practices can make solutions in PHP far more robust. 
 
 Much of the power of monadic types comes through the use of the functional Match, 
-For and Try language constructs.  PHP doesn't have these, and this library doesn't 
-provide them. You can see these implemented in additional chippyash libraries.
+Try and For Comprehension language constructs.  PHP doesn't have these. This library provides:
+
+- Match
+- FTry (TBC)
+- FFor (TBC)
  
 Key to functional programming is the use of strict typing and elevating functions as
 first class citizens within the language syntax. PHP5.4+ allows functions to be used as
@@ -49,7 +52,7 @@ A Monad has three things (according to my understanding of it):
 
 - a value (which may be no value at all, a simple type, an object or a function)
 - method of getting its value, often referred to as return()
-- a way of binding (or using) the value into some function, often refered to as  bind(), 
+- a way of binding (or using) the value into some function, often referred to as  bind(), 
 the return value of which is another Monad, often but not always of the same type as 
 the donor Monad. (Rarely, it could be another class type.)
 
@@ -79,7 +82,7 @@ method is another (Monadic) class.  The original value is left alone
 ### The Monad Abstract class
 
 Contains the Monad value holder and a `syntatic sugar` helper magic \__invoke() method that 
-proxies to value() if no parameters supplied or bind() if a Closure and optional arguments
+proxies to value() if no parameters supplied or bind() if a Closure (with/without optional arguments)
 are supplied.
 
 Neither the Monadic interface or the abstract Monad class define how to set a value on
@@ -162,6 +165,80 @@ for None (i.e. like the optional second parameter to Option::create() )
 
 You should also note that calling ->value() on a None will generate a RuntimeException
 because of course, a None does not have a value!
+
+#### Match
+
+The Match Monad allows you to carry out type pattern matching to create powerful and 
+dynamic functional equivalents of `case statements`.
+
+The basic syntax is
+
+<pre>
+use Monad\Match;
+
+$result = Match::on($initialValue)
+            ->test()
+            ->test()
+            ->value();
+</pre>
+
+where test() can the name of a native PHP type or the name of a class, e.g.:
+
+<pre>
+$result = Match::on($initialValue)
+            ->string()
+            ->Monad_Option()
+            ->Monad_Identity()
+            ->value()
+</pre>
+
+You can provide a concrete value as a parameter to each test, or a function. e.g.
+
+<pre>
+$result = Match::on($initialValue)
+              ->string('foo')
+              ->Monad_Option(
+                  function ($v) {
+                      return Match::on($v)
+                          ->Monad_Option_Some(function ($v) {
+                              return $v->value();
+                          })
+                          ->Monad_Option_None(function () {
+                              throw new \Exception();
+                          })
+                          ->value();
+                      }
+              )
+              ->Monad_Identity(
+                  function ($v) {
+                      return $v->value() . 'bar';
+                  }
+              )
+              ->value();
+</pre>
+
+You can find this being tested in MatchTest::testYouCanNestMatches()
+
+##### Supported native type matches
+
+- string
+- integer|int|long
+- float|double|real
+- null
+- array
+- bool|boolean
+- callable|function|closure
+- file
+- dir|directory
+- object
+- scalar
+- numeric
+- resource
+
+##### Supported class matching
+
+Use the fully namespaced name of the class to match, substituting the backslash \\
+with an underscore e.g. to test for `Monad\Option` use `Monad_Option`
 
 ## Further documentation
 
