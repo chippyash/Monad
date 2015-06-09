@@ -9,8 +9,8 @@ interface Monadic {
 }
 
 abstract class Monad {
-    #value:mixed
-    __invoke()
+    #mixed:value
+    __invoke():mixed
 }
 
 class Identity {
@@ -33,9 +33,18 @@ class Some {
     bind(Closure:function, array:args = [], mixed:noneValue=null):Some|None
 }
 
+class Match {
+    #mixed:value
+    #bool:isMatched
+    __construct(mixed:value, bool:isMatched)
+    on(mixed:value):Match
+    __call(string:method, array:args=[]):Match
+}
+
 Monadic <-- Monad
 Monad <-- Identity
 Monad <-- Option
 Option <-- None
 Option <-- Some
+Monadic <-- Match
 @enduml
