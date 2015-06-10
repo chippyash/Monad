@@ -14,8 +14,15 @@ class Match implements Monadic
     use FlattenAble;
     use ReturnValueAble;
 
+    /**
+     * @var bool
+     */
     protected $isMatched = false;
 
+    /**
+     * @param mixed $value
+     * @param bool $isMatched
+     */
     public function __construct($value, $isMatched = false)
     {
         $this->value = $value;
@@ -35,8 +42,21 @@ class Match implements Monadic
         return self::create($value);
     }
 
+    /**
+     * Magic unknown method that proxies native type and class type matching
+     *
+     * @param string $method
+     * @param array $args If args[0] set, then use as concrete value or function to
+     * bind onto current value
+     *
+     * @return Match
+     */
     public function __call($method, $args)
     {
+        if ($this->isMatched) {
+            return new self($this->value, $this->isMatched);
+        }
+
         if ($this->matchOnNative($method) || $this->matchOnClassName($method)) {
             if (isset($args[0])) {
                 if (is_callable($args[0])) {
@@ -51,6 +71,28 @@ class Match implements Monadic
             return new self($this->value);
         }
     }
+
+    /**
+     * Match anything. Usually called last in Match chain
+     *
+     * @param callable $function
+     * @param array $args Optional additional arguments to function
+     *
+     * @return Match
+     */
+    public function any(\Closure $function = null, array $args = [])
+    {
+        if ($this->isMatched) {
+            return new self($this->value, $this->isMatched);
+        }
+
+        if (is_null($function)) {
+            return new self($this->value, true);
+        }
+
+        return new self($this->callFunction($function, $this->value, $args), true);
+    }
+
 
     /**
      * Return value of Monad

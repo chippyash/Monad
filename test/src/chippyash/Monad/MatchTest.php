@@ -117,6 +117,50 @@ class MatchTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', $test->value());
     }
 
+    /**
+     * @dataProvider anyMatchData
+     * @param $value
+     */
+    public function testMatchOnAnyMethodWillMatchAnything($value)
+    {
+        $this->assertEquals(
+            $value,
+            Match::on($value)
+                ->any()
+                ->value()
+        );
+    }
+
+    /**
+     * @dataProvider anyMatchData
+     * @param $value
+     */
+    public function testMatchOnAnyMethodCanAcceptOptionalFunctionAndArguments($value)
+    {
+        $this->assertEquals(
+            'bar',
+            Match::on($value)
+                ->any(
+                    function($v, $z){return $z;},
+                    ['bar']
+                )
+            ->value()
+        );
+    }
+
+    public function anyMatchData()
+    {
+        return [
+            [2],
+            ['foo'],
+            [1.13],
+            [new \DateTime()],
+            [new \StdClass()],
+            [true],
+            [false]
+        ];
+    }
+
     public function testYouCanNestMatches()
     {
         $this->assertEquals('foo', $this->nestedMatcher('foo')->value());
@@ -128,6 +172,8 @@ class MatchTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(true);
         }
         $this->assertEquals('foobar', $this->nestedMatcher(Identity::create('foo'))->value());
+        //expecting match on any() as integer won't be matched
+        $this->assertEquals('any', $this->nestedMatcher(2)->value());
     }
 
     protected function nestedMatcher($initialValue)
@@ -149,6 +195,11 @@ class MatchTest extends \PHPUnit_Framework_TestCase
             ->Monad_Identity(
                 function ($v) {
                     return $v->value() . 'bar';
+                }
+            )
+            ->any(
+                function() {
+                    return 'any';
                 }
             );
     }

@@ -39,6 +39,7 @@ class Match {
     __construct(mixed:value, bool:isMatched)
     {static} on(mixed:value):Match
     __call(string:method, array:args=[]):Match
+    any(Closure:function = null, array:$args = []):Match
 }
 
 Monadic <-- Monad

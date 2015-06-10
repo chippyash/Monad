@@ -192,6 +192,16 @@ $result = Match::on($initialValue)
             ->value()
 </pre>
 
+You can use the Match::any() method to catch anything not matched by a specific matcher:
+
+<pre>
+$result = Match::on($initialValue)
+            ->string()
+            ->int()
+            ->any()
+            ->value();
+</pre>
+
 You can provide a concrete value as a parameter to each test, or a function. e.g.
 
 <pre>
@@ -214,6 +224,7 @@ $result = Match::on($initialValue)
                       return $v->value() . 'bar';
                   }
               )
+              ->any(function(){return 'any';})
               ->value();
 </pre>
 
