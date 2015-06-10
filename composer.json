@@ -1,9 +1,9 @@
 {
     "name": "chippyash/monad",
-    "description": "Monad support for PHP",
+    "description": "Functional programming Monad support",
     "homepage" : "http://the-matrix.github.io/",
     "license": "GPL 3.0",
-    "keywords": ["monad","identity","option","state","functional"],
+    "keywords": ["monad","identity","option","match","functional"],
     "authors": [
         {
             "name": "Ashley Kitson",
