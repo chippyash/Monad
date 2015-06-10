@@ -24,6 +24,7 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 * Option Monad
     * Some
     * None
+* Match
 
 ## Why?
 
@@ -77,7 +78,7 @@ Additionally, two helper methods are defined for the interface
 - static create(mixed $value):Monadic A factory method to create an instance of the concrete descendant Monad
 
 Monads have an immutable value, that is to say, the result of the bind()
-method is another (Monadic) class.  The original value is left alone
+method is another (Monadic) class.  The original value is left alone.
 
 ### The Monad Abstract class
 
@@ -166,6 +167,11 @@ for None (i.e. like the optional second parameter to Option::create() )
 You should also note that calling ->value() on a None will generate a RuntimeException
 because of course, a None does not have a value!
 
+##### Other methods supported
+
+* getOrElse(mixed:elseValue) If the Option is a Some, return the Option->value() else
+    return the elseValue
+    
 #### Match
 
 The Match Monad allows you to carry out type pattern matching to create powerful and 
@@ -253,6 +259,10 @@ with an underscore e.g. to test for `Monad\Option` use `Monad_Option`
 
 ## Further documentation
 
+Please note that what you are seeing of this documentation displayed on Github is
+always the latest dev-master. The features it describes may not be in a released version
+ yet. Please check the documentation of the version you Compose in, or download.
+
 [Test Contract](https://github.com/chippyash/Monad/blob/master/docs/Test-Contract.md) in the docs directory.
 
 ### UML
@@ -291,6 +301,13 @@ Install [Composer](https://getcomposer.org/)
     "chippyash/monad": "~1.0.0"
 </pre>
 
+Or to use the latest, possibly unstable version:
+
+<pre>
+    "chippyash/monad": "dev-master"
+</pre>
+
+
 #### For development
 
 Clone this repo, and then run Composer in local repo root to pull in dependencies
@@ -298,7 +315,7 @@ Clone this repo, and then run Composer in local repo root to pull in dependencie
 <pre>
     git clone git@github.com:chippyash/Monad.git Monad
     cd Monad
-    composer update
+    composer install
 </pre>
 
 To run the tests:
@@ -319,9 +336,11 @@ This software library contains code items that are derived from other works:
 None of the contained code items breaks the overriding license, or vice versa,  as far as I can tell. 
 So as long as you stick to GPL V3+ then you are safe. If at all unsure, please seek appropriate advice.
 
-If the original copyright owners of the included code items object to this inclusion, please contact the author.
+If the original copyright owners of the derived code items object to this inclusion, please contact the author.
 
 A commercial license is available for this software library, please contact the author. 
+It is normally free to deserving causes, but gets you around the limitation of the GPL
+license, which does not allow unrestricted inclusion of this code in commercial works.
 
 ## Thanks
 

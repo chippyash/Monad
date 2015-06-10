@@ -35,4 +35,20 @@ abstract class Option extends Monad
 
         return new Some($value);
     }
+
+    /**
+     * Return option value if Some else the elseValue
+     *
+     * @param mixed $elseValue
+     *
+     * @return mixed
+     */
+    public function getOrElse($elseValue)
+    {
+        if ($this instanceof Some) {
+            return $this->value();
+        }
+
+        return $elseValue;
+    }
 }

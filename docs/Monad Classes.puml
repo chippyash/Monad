@@ -19,6 +19,7 @@ class Identity {
 
 abstract class Option {
     {static} create(mixed:value, mixed:noneValue=null):Some|None
+    getOrElse(mixed:elseValue):mixed
 }
 
 class None {

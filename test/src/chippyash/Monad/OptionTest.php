@@ -20,7 +20,6 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($refl->isAbstract());
     }
 
-
     public function testCreatingWithAValueReturnsASome()
     {
         $sut = Option::create('foo');
@@ -41,5 +40,17 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Option\Some', $sut);
         $sut1 = Option::create(false, false);
         $this->assertInstanceOf('Monad\Option\None', $sut1);
+    }
+
+    public function testGetOrElseWillReturnOptionValueIfOptionIsASome()
+    {
+        $sut = Option::create(true);
+        $this->assertTrue($sut->getOrElse(false));
+    }
+
+    public function testGetOrElseWillReturnElseValueIfOptionIsANone()
+    {
+        $sut = Option::create(true, true);
+        $this->assertFalse($sut->getOrElse(false));
     }
 }
