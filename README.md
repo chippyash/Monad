@@ -339,4 +339,4 @@ The following have done work on which this library is based:
 
 ## History
 
-V0...  pre releases
+V1.0.0 Initial Release
