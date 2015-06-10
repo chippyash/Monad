@@ -287,10 +287,8 @@ Install [Composer](https://getcomposer.org/)
 
 #### For production
 
-We are still in pre production
-
 <pre>
-    "chippyash/monad": "dev-master"
+    "chippyash/monad": "~1.0.0"
 </pre>
 
 #### For development
