@@ -229,13 +229,8 @@ or a Failure as a result of binding.
 If you really want to throw the exception contained in a Failure use the `pass()` method
 
 <pre>
-Match::on(FTry::with($myFunction($initialValue())))
-    ->Monad_FTry_Success(function ($v) {doSomethingGood($v);})
-    ->Monad_FTry_Failure(
-        function (\Exception $e) {
-            $e->pass(); 
-        }
-    );
+$try = FTry::with($myFunction());
+if (!$try->isSuccess()) $try->pass();
 </pre>
 
 #### Match
