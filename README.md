@@ -226,6 +226,18 @@ echo 'The colour is' . FTry::with(myTest())->isSuccess() ? 'blue' : 'red';
 Once a Failure, always a Failure.  However, A Success can yield either a Success
 or a Failure as a result of binding.
 
+If you really want to throw the exception contained in a Failure use the `pass()` method
+
+<pre>
+Match::on(FTry::with($myFunction($initialValue())))
+    ->Monad_FTry_Success(function ($v) {doSomethingGood($v);})
+    ->Monad_FTry_Failure(
+        function (\Exception $e) {
+            $e->pass(); 
+        }
+    );
+</pre>
+
 #### Match
 
 The Match Monad allows you to carry out type pattern matching to create powerful and 
