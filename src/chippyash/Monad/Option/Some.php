@@ -29,15 +29,14 @@ class Some extends Option
     /**
      * Return Some or None as a result of bind
      *
-     * @param \Closure $function Ignored
-     * @param array $args Ignored
+     * @param \Closure $function
+     * @param array $args
      * @param mixed $noneValue Optional value to test for None
      *
      * @return Some|None
      */
     public function bind(\Closure $function, array $args = [], $noneValue = null)
     {
-        $a = func_get_args();
         return Option::create($this->callFunction($function, $this->value, $args), $noneValue);
     }
 }

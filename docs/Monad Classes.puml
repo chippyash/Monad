@@ -43,10 +43,33 @@ class Match {
     any(Closure:function = null, array:$args = []):Match
 }
 
+abstract class FTry {
+    {static} with(mixed:value):Success|Failure
+    getOrElse(mixed:elseValue):mixed
+    {abstract} isSuccess():bool
+}
+
+class Success {
+    __construct(mixed:value)
+    bind(Closure:function, array:args = []):Success|Failure
+    isSuccess():bool(true)
+}
+
+class Failure {
+    __construct(Exception:value)
+     create(mixed:value = null):Failure
+    bind(Closure:function, array:args = []):Failure
+    pass():!!Exception
+    isSuccess():bool(false)
+}
+
 Monadic <-- Monad
+Monadic <-- Match
 Monad <-- Identity
 Monad <-- Option
 Option <-- None
 Option <-- Some
-Monadic <-- Match
+Monad <-- FTry
+FTry <-- Success
+FTry <-- Failure
 @enduml

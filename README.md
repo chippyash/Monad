@@ -24,6 +24,9 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 * Option Monad
     * Some
     * None
+* FTry
+    * Success
+    * Failure
 * Match
 
 ## Why?
@@ -37,7 +40,7 @@ Much of the power of monadic types comes through the use of the functional Match
 Try and For Comprehension language constructs.  PHP doesn't have these. This library provides:
 
 - Match
-- FTry (TBC)
+- FTry
 - FFor (TBC)
  
 Key to functional programming is the use of strict typing and elevating functions as
@@ -172,6 +175,57 @@ because of course, a None does not have a value!
 * getOrElse(mixed:elseValue) If the Option is a Some, return the Option->value() else
     return the elseValue
     
+#### FTry
+
+An FTry is a polymorphic `Try Monad` that can exist in one of two states:
+
+- Success - an FTry with a value
+- Failure - an FTry with a PHP Exception as a value
+
+`Try` is a reserved word in PHP, so I have called this class FTry to mean `Functional Try`.
+
+As PHP does not have the language construct to create a polymorphic object by construction,
+you'll need to use the FTry::with() (or FTry::create()) static method.  You can however 
+use FTry as a type hint for other class methods and returns
+
+FTry::on(value) will catch any Exception incurred in processing the value, and return
+a Success or Failure class appropriately.  This makes it ideal for the simple case
+of wrapping a PHP transaction in a Try - Catch block:
+ 
+<pre>
+use Monad\FTry;
+use Monad\Match;
+
+Match::on(FTry::with($myFunction($initialValue())))
+    ->Monad_FTry_Success(function ($v) {doSomethingGood($v);})
+    ->Monad_FTry_Failure(
+        function (\Exception $e) {
+            echo "Exception: " . $e->getMessage(); 
+        }
+    );
+</pre>
+
+A fairly simplistic example, and one where you might question its value, as it could have
+ been written as easily using conventional PHP.  But: A Success or Failure is still 
+ a Monad, and so you can still bind (map) onto the resultant class, flatten it etc.
+ 
+Like Option, FTry also supports the `getOrElse(mixed:elseValue)` method allowing for implementing
+default behaviours:
+
+<pre>
+echo FTry::with(myComplexPrintableTransaction())
+    ->getOrElse('Sorry - that failed');
+</pre>
+
+For completeness, FTry also supports `isSuccess()`:
+
+<pre>
+echo 'The colour is' . FTry::with(myTest())->isSuccess() ? 'blue' : 'red';
+</pre>
+
+Once a Failure, always a Failure.  However, A Success can yield either a Success
+or a Failure as a result of binding.
+
 #### Match
 
 The Match Monad allows you to carry out type pattern matching to create powerful and 
@@ -357,3 +411,4 @@ The following have done work on which this library is based:
 ## History
 
 V1.0.0 Initial Release
+V1.1.0 Added FTry

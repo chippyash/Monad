@@ -20,7 +20,6 @@ abstract class Option extends Monad
 {
     /**
      * Create a concrete option. If value === null then return None else Some($value)
-     * Proxy to option()
      *
      * @param mixed $value Value
      * @param mixed $noneValue Optional value to test for None
