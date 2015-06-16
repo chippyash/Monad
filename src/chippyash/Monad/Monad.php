@@ -65,7 +65,7 @@ abstract class Monad implements Monadic
      * @throw BadMethodCallException
      */
     public function __invoke()
-    {
+    { $a= func_num_args(); $b=func_get_args();
         if (func_num_args() == 0) {
             return $this->value();
         }

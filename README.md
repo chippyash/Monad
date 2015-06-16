@@ -8,6 +8,12 @@ Certified for PHP 5.4+
 [![Coverage Status](https://coveralls.io/repos/chippyash/Monad/badge.svg?branch=master)](https://coveralls.io/r/chippyash/Monad?branch=master)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
 
+The above badges represent the current development branch.  As a rule, I don't push
+ to GitHub unless tests, coverage and usability are acceptable.  This may not be
+ true for short periods of time; on holiday, need code for some other downstream
+ project etc.  If you need stable code, use a tagged version. Read 'Further Documentation'
+ and 'Installation'.
+ 
 ## What?
 
 Provides a Monadic type
@@ -24,10 +30,11 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 * Option Monad
     * Some
     * None
-* FTry
+* FTry Monad
     * Success
     * Failure
-* Match
+* Match Monad
+* Collection Monad
 
 ## Why?
 
@@ -318,6 +325,32 @@ You can find this being tested in MatchTest::testYouCanNestMatches()
 Use the fully namespaced name of the class to match, substituting the backslash \\
 with an underscore e.g. to test for `Monad\Option` use `Monad_Option`
 
+#### Collection
+
+Under construction in dev-master:
+
+The Monad Collection provides a structured array that behaves as a Monad.  Initial
+implementation is to ensure consistency with the Monad convention. Later on, we'll make
+it look like a functional List.  Very important to note however is that unlike a PHP array, 
+the Collection is type specific, i.e. you specify Collection specifically or by default
+as the first member of its construction array.  Although the Collection implements
+ the ArrayAccess interface, trying to set or unset a value `$mCollection[0] = 'foo'` or
+ `unset($mCollection[0])` *will* throw an exception, as Collections are immutable.
+ 
+As usual, this is not really a problem, as you can bind() on a Collection to return
+  another Collection, (which can contain values of a different type.)  Wherever possible, 
+  I've expressed the Collection implementation in terms of Match statements, not only 
+  because it usually means tighter code, but as something that you can look at 
+  (and criticise hopefully!) by example.
+  
+I chose Collection as the name as it doesn't clash with `list` which is a PHP reserved name.
+In essence, Collection will to all intents and purposes be a List, but for die hard PHPers
+still behave as an array.
+
+A secondary design consideration, is that you should be able
+ to use Collection oblivious of that fact that it is a Monad, except that it is type
+ specific.
+ 
 ## Further documentation
 
 Please note that what you are seeing of this documentation displayed on Github is

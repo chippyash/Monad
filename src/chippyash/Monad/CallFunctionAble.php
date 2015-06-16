@@ -23,7 +23,8 @@ trait CallFunctionAble
      *
      * @return Monadic
      */
-    protected function callFunction(\Closure $function, $value, array $args = []) {
+    protected function callFunction(\Closure $function, $value, array $args = [])
+    {
         if ($value instanceof Monadic) {
             return $value->bind($function, $args);
         }

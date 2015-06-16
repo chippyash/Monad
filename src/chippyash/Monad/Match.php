@@ -93,6 +93,32 @@ class Match implements Monadic
         return new self($this->callFunction($function, $this->value, $args), true);
     }
 
+    /**
+     * Test current value for exact equality to the test value
+     *
+     * @param mixed $test Value to test against
+     *
+     * @param callable $function Function that is used if test is true
+     * @param array $args Optional additional arguments to function
+     *
+     * @return Match
+     */
+    public function test($test, \Closure $function = null, array $args = [])
+    {
+        if ($this->isMatched) {
+            return new self($this->value, $this->isMatched);
+        }
+        if ($this->value === $test ) {
+            if (is_null($function)) {
+                return new self($this->value, true);
+            }
+
+            return new self($this->callFunction($function, $this->value, $args), true);
+        }
+
+        return new self($this->value());
+    }
+
 
     /**
      * Return value of Monad

@@ -18,6 +18,25 @@
 *  You can get a value from a success
 *  Calling is success will return true
 
+## Monad\Test\Collection
+
+*  You can construct a collection with a non empty array
+*  You cannot construct a collection with null values
+*  You cannot construct a collection with an empty array and no type specified
+*  You can construct an empty collection if you pass a type
+*  When constructing a collection you must have same type values
+*  Constructing a collection with dissimilar types will cause an exception
+*  You can create a collection
+*  You can bind a function to each member of the collection and return a collection
+*  You can count the items in the collection
+*  You can get an iterator for a collection
+*  You cannot unset a collection member
+*  You cannot set a collection member
+*  You can get a collection member as an array offset
+*  You can test if a collection member exists as an array offset
+*  You can create a collection of collections
+*  Flattening a collection of collections will return p h p array of arrays
+
 ## Monad\Test\FTry
 
 *  Creating an f try with a non exception will return a success
@@ -53,6 +72,7 @@
 *  Match on any method will match anything
 *  Match on any method can accept optional function and arguments
 *  You can nest matches
+*  You can test for equality
 
 ## Monad\Test\Monad
 

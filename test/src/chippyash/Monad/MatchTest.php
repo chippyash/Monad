@@ -12,6 +12,8 @@ namespace Monad\Test;
 use Monad\Identity;
 use Monad\Match;
 use Monad\Option;
+use Monad\Option\Some;
+use Monad\Option\None;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 
@@ -202,5 +204,30 @@ class MatchTest extends \PHPUnit_Framework_TestCase
                     return 'any';
                 }
             );
+    }
+
+    public function testYouCanTestForEquality()
+    {
+        $test = Match::on('foo')
+            ->test('foo')
+            ->value();
+        $this->assertEquals('foo', $test);
+
+        $test = Match::on('foo')
+            ->test('bar')
+            ->value();
+        $this->assertEquals('foo', $test);
+
+        $test = Match::on('foo')
+            ->test('foo', function($v){return new Some($v);})
+            ->flatten();
+        $this->assertEquals('foo', $test);
+
+        $test = Match::on('bar')
+            ->test('foo', function($v){return new Some($v);})
+            ->any(function(){return new None();})
+            ->value();
+        $this->assertInstanceOf('Monad\Option\None', $test);
+
     }
 }

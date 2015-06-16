@@ -31,8 +31,11 @@ abstract class FTry extends Monad
         }
         try {
             if ($value instanceof \Closure) {
-                //test to ensure function doesn't throw exception
-                $value();
+                //test to ensure function doesn't throw exception or is an Exception
+                $potentialException = $value();
+                if ($potentialException instanceof \Exception) {
+                    return new Failure($potentialException);
+                }
             } elseif ($value instanceof Monadic) {
                 //test to ensure enclosed Monad value isn't an exception
                 self::create($value->flatten());
