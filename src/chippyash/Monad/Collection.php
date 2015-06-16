@@ -23,11 +23,6 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     use ReturnValueAble;
     use CallFunctionAble;
 
-    /** 
-     * @var array Data associated with the object. 
-     */
-    protected $value;
-
     /**
      * The Type of the items in the collection
      *
