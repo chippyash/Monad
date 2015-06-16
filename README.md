@@ -419,6 +419,32 @@ To run the tests:
     vendor/bin/phpunit -c test/phpunit.xml test/
 </pre>
 
+##### Debugging
+
+Because PHP doesn't really support functional programming at it's core level, debugging
+  using XDebug etc becomes a nested mess. Some things I've found helpful:
+
+- isolate your tests, at least at the initial stage. If you get a problem, create a test
+that does one thing - the thing you are trying to debug. Use that as your start point.
+
+- be mindful of value() and flatten(), the former gets the immediate Monad value, the
+latter gives you a PHP fundamental.
+
+- when constructing Matches, ensure the value contained in the Match conforms to the
+type you are expecting.  Remember, Match returns a Match with a value. And yes, I've
+tripped up on this myself.
+
+- keep running the other tests. Seems simple, but in the headlong pursuit of your
+single objective, it's easy to forget that the library is interdependent (and will 
+ become increasingly so as we are able to wrap new functionality back into the original
+ code. e.g. Collection is dependent on Match: when FFor is implemented, Match will change.)
+ Run the whole test suite on a regular basis. That way you catch anything that has broken
+ upstream functionality.  This library will be complete when it, as far as possible,
+ expresses itself in terms of itself!
+ 
+- the tests that are in place are there for a good reason: open an issue if you think
+they are wrong headed, misguided etc
+
 ## License
 
 This software library is released under the [GNU GPL V3 or later license](http://www.gnu.org/copyleft/gpl.html)
