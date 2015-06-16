@@ -8,7 +8,6 @@
  */
 
 namespace Monad;
-use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Monad\FTry\Success;
 use Monad\FTry\Failure;
 use Monad\FTry;
