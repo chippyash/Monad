@@ -63,8 +63,13 @@ class Failure {
     isSuccess():bool(false)
 }
 
+class Collection <<ArrayAccess, IteratorAggregate, Countable>> {
+    __construct(array:value = [], string:type = null)
+}
+
 Monadic <-- Monad
 Monadic <-- Match
+Monadic <-- Collection
 Monad <-- Identity
 Monad <-- Option
 Option <-- None
@@ -72,4 +77,5 @@ Option <-- Some
 Monad <-- FTry
 FTry <-- Success
 FTry <-- Failure
+
 @enduml
