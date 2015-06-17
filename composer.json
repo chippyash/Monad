@@ -3,7 +3,7 @@
     "description": "Functional programming Monad support",
     "homepage" : "http://the-matrix.github.io/",
     "license": "GPL 3.0",
-    "keywords": ["monad","identity","option","match","functional"],
+    "keywords": ["monad","identity","option","match","functional","try","collection"],
     "authors": [
         {
             "name": "Ashley Kitson",
