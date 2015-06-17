@@ -327,13 +327,36 @@ with an underscore e.g. to test for `Monad\Option` use `Monad_Option`
 
 #### Collection
 
-Under construction in dev-master:
+The Monad Collection provides a structured array that behaves as a Monad.  
 
-The Monad Collection provides a structured array that behaves as a Monad.  Initial
-implementation is to ensure consistency with the Monad convention. Later on, we'll make
-it look like a functional List.  Very important to note however is that unlike a PHP array, 
+Very important to note however is that unlike a PHP array, 
 the Collection is type specific, i.e. you specify Collection specifically or by default
-as the first member of its construction array.  Although the Collection implements
+as the first member of its construction array.  
+
+<pre>
+use Monad\Collection;
+
+$c = Collection::create([1,2,3,4]);
+//or
+$c = Collection::create([1,2,3,4], 'integer');
+
+//to create an empty collection, you must specify type
+$c = Collection::create([], 'integer');
+$c = Collection::create([], 'Monad\Option');
+</pre>
+
+You can get and test a Collection:
+ 
+<pre>
+$c = Collection::create([1,2,3,4]);
+$v = $c[2] // == 3
+
+if (!isset($c[6]) { 
+... 
+}
+</pre>
+ 
+Although the Collection implements
  the ArrayAccess interface, trying to set or unset a value `$mCollection[0] = 'foo'` or
  `unset($mCollection[0])` *will* throw an exception, as Collections are immutable.
  
@@ -342,14 +365,50 @@ As usual, this is not really a problem, as you can bind() on a Collection to ret
   I've expressed the Collection implementation in terms of Match statements, not only 
   because it usually means tighter code, but as something that you can look at 
   (and criticise hopefully!) by example.
-  
+
+You can get the difference of two collections:
+
+<pre>
+$s1 = Collection::create([1, 2, 3, 6, 7]);
+$s2 = Collection::create([6,7]);
+$s3 = $s1->diff($s2);
+</pre>
+
+And the intersection:
+
+<pre>
+$s1 = Collection::create([1, 2, 3, 6, 7]);
+$s2 = Collection::create([6,7]);
+$s3 = $s1->intersect($s2);
+</pre>
+
+Both `diff` and `intersect` can take a second optional Closure parameter which is used
+as the comparator method.
+
+You can get the union of two collections, either by value or key:
+
+<pre>
+$s1 = Collection::create([1, 2, 3, 6, 7]);
+$s2 = Collection::create([3, 6, 7, 8]);
+$valueUnion = $s1->vUnion($s2);
+$keyUnion =  $s1->kUnion($s2);
+</pre>
+
+You can get the head and the tail of a collection:
+
+<pre>
+$s1 = Collection::create([1, 2, 3, 6, 7]);
+echo $s1->head()->value()[0] // 1
+echo $s1->tail()->value()[0] // 2
+echo $s1->tail()->value()[3] // 7
+</pre>
+
 I chose Collection as the name as it doesn't clash with `list` which is a PHP reserved name.
 In essence, Collection will to all intents and purposes be a List, but for die hard PHPers
 still behave as an array.
 
-A secondary design consideration, is that you should be able
- to use Collection oblivious of that fact that it is a Monad, except that it is type
- specific.
+A secondary design consideration, is that you should be able to use Collection 
+oblivious of that fact that it is a Monad, except that it is type specific.
  
 ## Further documentation
 
@@ -479,3 +538,5 @@ The following have done work on which this library is based:
 V1.0.0 Initial Release
 
 V1.1.0 Added FTry
+
+V1.2.0 Added Collection

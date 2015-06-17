@@ -123,4 +123,102 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             $this->assertInternalType('array', $value);
         }
     }
+
+    public function testYouCanGetTheDifferenceBetweenTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $this->assertEquals([1,2,3], $s1->diff($s2)->flatten());
+    }
+
+    public function testYouCanChainDiffMethodsToActOnArbitraryNumbersOfCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $s3 = Collection::create([1]);
+        $s4 = Collection::create([9]);
+
+        $this->assertEquals([2,3], array_values($s1->diff($s2)->diff($s3)->diff($s4)->flatten()));
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToDiffMethod()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $f = function($a, $b){
+            return ($a<$b ? -1 : ($a>$b ? 1 : 0));
+        };
+        $this->assertEquals([1,2,3], $s1->diff($s2, $f)->flatten());
+    }
+
+    public function testYouCanGetTheIntersectionOfTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $this->assertEquals([6,7], array_values($s1->intersect($s2)->flatten()));
+    }
+
+    public function testYouCanChainIntersectMethodsToActOnArbitraryNumbersOfCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $s3 = Collection::create([7]);
+
+        $this->assertEquals([7], array_values($s1->intersect($s2)->intersect($s3)->flatten()));
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToIntersectMethod()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $f = function($a, $b){
+            return ($a<$b ? -1 : ($a>$b ? 1 : 0));
+        };
+        $this->assertEquals([6, 7], array_values($s1->intersect($s2, $f)->flatten()));
+    }
+
+    public function testYouCanGetTheUnionOfValuesOfTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([3, 6, 7, 8]);
+        $this->assertEquals([1,2,3,6,7,8], array_values($s1->vUnion($s2)->flatten()));
+    }
+
+    public function testYouCanChainTheUnionOfValuesOfTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([3, 6, 7, 8]);
+        $s3 = Collection::create([7, 8, 9, 10]);
+        $this->assertEquals([1,2,3,6,7,8,9,10], array_values($s1->vUnion($s2)->vUnion($s3)->flatten()));
+    }
+
+    public function testYouCanGetTheUnionOfKeysOfTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([0, 0, 3, 6, 7, 8]);
+        $this->assertEquals([0=>1,1=>2,2=>3,3=>6,4=>7, 5=>8], $s1->kUnion($s2)->flatten());
+    }
+
+    public function testYouCanChainTheUnionOfKeysOfTwoCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([0, 0, 3, 6, 7, 8]);
+        $s3 = Collection::create([0, 0, 0, 7, 8, 9, 10]);
+        $this->assertEquals(
+            [0=>1, 1=>2, 2=>3, 3=>6,4=>7, 5=>8, 6=>10],
+            $s1->kUnion($s2)->kUnion($s3)->flatten()
+        );
+    }
+
+    public function testTheHeadOfACollectionIsItsFirstMember()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals([1], $s1->head()->flatten());
+    }
+
+    public function testTheTailOfACollectionIsAllButItsFirstMember()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals([2, 3, 6, 7], $s1->tail()->flatten());
+    }
 }

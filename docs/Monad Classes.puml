@@ -65,6 +65,12 @@ class Failure {
 
 class Collection <<ArrayAccess, IteratorAggregate, Countable>> {
     __construct(array:value = [], string:type = null)
+    diff(Collection:other, Closure:function = null):Collection
+    intersect(Collection:other, Closure:function = null):Collection
+    vUnion(Collection:other):Collection
+    kUnion(Collection:other):Collection
+    head():Collection
+    tail():Collection
 }
 
 Monadic <-- Monad

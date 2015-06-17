@@ -36,6 +36,18 @@
 *  You can test if a collection member exists as an array offset
 *  You can create a collection of collections
 *  Flattening a collection of collections will return p h p array of arrays
+*  You can get the difference between two collections
+*  You can chain diff methods to act on arbitrary numbers of collections
+*  You can supply an optional comparator function to diff method
+*  You can get the intersection of two collections
+*  You can chain intersect methods to act on arbitrary numbers of collections
+*  You can supply an optional comparator function to intersect method
+*  You can get the union of values of two collections
+*  You can chain the union of values of two collections
+*  You can get the union of keys of two collections
+*  You can chain the union of keys of two collections
+*  The head of a collection is its first member
+*  The tail of a collection is all but its first member
 
 ## Monad\Test\FTry
 

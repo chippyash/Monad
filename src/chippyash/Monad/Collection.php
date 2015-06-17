@@ -173,6 +173,101 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     }
 
     /**
+     * Compares this collection against another collection and returns a new Collection
+     * with the values in this collection that are not present in the other collection.
+     * Note that keys are preserved
+     *
+     * If the optional comparison function is supplied it must have signature
+     * function(mixed $a, mixed $b){}. The comparison function must return an integer
+     * less than, equal to, or greater than zero if the first argument is considered
+     * to be respectively less than, equal to, or greater than the second.
+     *
+     * @param Collection $other
+     * @param Closure Optional function to compare values
+     *
+     * @return Collection
+     */
+    public function diff(Collection $other, \Closure $function = null)
+    {
+        if (is_null($function)) {
+            return new self(\array_diff($this->value(), $other->value()));
+        }
+
+        return new self(\array_udiff($this->value(), $other->value(), $function));
+    }
+
+    /**
+     * Returns a Collection containing all the values of this Collection that are present
+     * in the other Collection. Note that keys are preserved
+     *
+     * If the optional comparison function is supplied it must have signature
+     * function(mixed $a, mixed $b){}. The comparison function must return an integer
+     * less than, equal to, or greater than zero if the first argument is considered
+     * to be respectively less than, equal to, or greater than the second.
+     *
+     * @param Collection $other
+     * @param callable $function Optional function to compare values
+     *
+     * @return Collection
+     */
+    public function intersect(Collection $other, \Closure $function = null)
+    {
+        if (is_null($function)) {
+            return new self(\array_intersect($this->value(), $other->value()));
+        }
+
+        return new self(\array_uintersect($this->value(), $other->value(), $function));
+    }
+
+    /**
+     * Return a Collection that is the union of the values of this Collection
+     * and the other Collection. Note that keys may be discarded and new ones set
+     *
+     * @param Collection $other
+     *
+     * @return Collection
+     */
+    public function vUnion(Collection $other)
+    {
+        return new self(\array_unique(\array_merge($this->value(), $other->value())));
+    }
+
+    /**
+     * Return a Collection that is the union of the values of this Collection
+     * and the other Collection using the keys for comparison
+     *
+     * @param Collection $other
+     *
+     * @return Collection
+     */
+    public function kUnion(Collection $other)
+    {
+        return new self($this->value() + $other->value());
+    }
+
+    /**
+     * Return a Collection with the first element of this Collection as its only
+     * member
+     *
+     * @return Collection
+     */
+    public function head()
+    {
+        return new self(array_slice($this->value(), 0, 1));
+    }
+
+    /**
+     * Return a Collection with all but the first member of this Collection
+     *
+     * @return Collection
+     */
+    public function tail()
+    {
+        return new self(array_slice($this->value(), 1));
+    }
+
+
+    /**
      * @param string $type
      *
      * @return FTry
@@ -199,7 +294,11 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     {
         //required to be defined as a var so it can be called in next statement
         $basicTest = function() use($value) {
-            return isset($value[0]) && !is_null($value[0]) ? $value[0] : null;
+            if (count($value) > 0) {
+                return array_values($value)[0];
+            }
+
+            return null;
         };
 
         //@var Option
