@@ -451,7 +451,7 @@ Install [Composer](https://getcomposer.org/)
 #### For production
 
 <pre>
-    "chippyash/monad": "~1.0.0"
+    "chippyash/monad": "~1.2.0"
 </pre>
 
 Or to use the latest, possibly unstable version:
