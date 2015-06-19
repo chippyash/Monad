@@ -59,7 +59,7 @@ class Match implements Monadic
 
         if ($this->matchOnNative($method) || $this->matchOnClassName($method)) {
             if (isset($args[0])) {
-                if (is_callable($args[0])) {
+                if (is_callable($args[0]) && !$args[0] instanceof Monadic) {
                     return new self($args[0]($this->value), true);
                 } else {
                     return new self($args[0], true);

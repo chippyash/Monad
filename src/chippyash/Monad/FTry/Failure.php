@@ -26,7 +26,7 @@ class Failure extends FTry
     /**
      * Always return another instance of Failure
      *
-     * @param Exception $value Ignored
+     * @param \Exception $value Ignored
      *
      * @return Failure
      */
