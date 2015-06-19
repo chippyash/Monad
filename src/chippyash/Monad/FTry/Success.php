@@ -57,9 +57,12 @@ class Success extends FTry
 
     /**
      * Do nothing
+     *
+     * @return $this
      */
     public function pass()
     {
+        return $this;
     }
 
 }
