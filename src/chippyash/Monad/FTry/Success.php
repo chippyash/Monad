@@ -55,4 +55,11 @@ class Success extends FTry
         return true;
     }
 
+    /**
+     * Do nothing
+     */
+    public function pass()
+    {
+    }
+
 }
