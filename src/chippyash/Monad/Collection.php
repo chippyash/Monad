@@ -46,8 +46,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
             ->null(function() use ($value) {return $this->setTypeFromValue($value);});
 
         Match::on($setType->value())
-            ->Monad_FTry_Success(function() use ($value) {$this->setValue($value);})
-            ->Monad_FTry_Failure(function() use ($setType) {$setType->value()->pass();});
+            ->Monad_FTry_Success(function() use ($value) {return $this->setValue($value);})
+            ->Monad_FTry_Failure(function() use ($setType) {return $setType->value();})
+            ->value()
+            ->pass();
     }
 
     /**
@@ -190,10 +192,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function diff(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new self(\array_diff($this->value(), $other->value()));
+            return new self(\array_diff($this->value(), $other->value()), $this->type);
         }
 
-        return new self(\array_udiff($this->value(), $other->value(), $function));
+        return new self(\array_udiff($this->value(), $other->value(), $function), $this->type);
     }
 
     /**
@@ -213,10 +215,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function intersect(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new self(\array_intersect($this->value(), $other->value()));
+            return new self(\array_intersect($this->value(), $other->value()), $this->type);
         }
 
-        return new self(\array_uintersect($this->value(), $other->value(), $function));
+        return new self(\array_uintersect($this->value(), $other->value(), $function), $this->type);
     }
 
     /**
@@ -229,7 +231,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function vUnion(Collection $other)
     {
-        return new self(\array_unique(\array_merge($this->value(), $other->value())));
+        return new self(\array_unique(\array_merge($this->value(), $other->value())), $this->type);
     }
 
     /**
@@ -242,7 +244,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function kUnion(Collection $other)
     {
-        return new self($this->value() + $other->value());
+        return new self($this->value() + $other->value(), $this->type);
     }
 
     /**

@@ -46,11 +46,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @ExpectedException \RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testConstructingACollectionWithDissimilarTypesWillCauseAnException()
     {
-        $this->assertInstanceOf('Monad\Collection', new Collection(['foo',new \StdClass(),'baz'], 'string'));
+        new Collection(['foo',new \StdClass(),'baz'], 'string');
     }
 
     public function testYouCanCreateACollection()
@@ -208,6 +208,22 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             [0=>1, 1=>2, 2=>3, 3=>6,4=>7, 5=>8, 6=>10],
             $s1->kUnion($s2)->kUnion($s3)->flatten()
         );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testPerformingAValueUnionTheDissimilarCollectionsWillThrowAnException()
+    {
+        (new Collection([],'string'))->vUnion(new Collection([1]));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testPerformingAKeyUnionTheDissimilarCollectionsWillThrowAnException()
+    {
+        (new Collection([],'string'))->kUnion(new Collection([1]));
     }
 
     public function testTheHeadOfACollectionIsItsFirstMember()

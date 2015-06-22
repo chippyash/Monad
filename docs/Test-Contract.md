@@ -46,6 +46,8 @@
 *  You can chain the union of values of two collections
 *  You can get the union of keys of two collections
 *  You can chain the union of keys of two collections
+*  Performing a value union the dissimilar collections will throw an exception
+*  Performing a key union the dissimilar collections will throw an exception
 *  The head of a collection is its first member
 *  The tail of a collection is all but its first member
 
