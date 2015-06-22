@@ -39,7 +39,7 @@ class Match implements Monadic
      */
     public static function on($value)
     {
-        return self::create($value);
+        return static::create($value);
     }
 
     /**
@@ -54,21 +54,21 @@ class Match implements Monadic
     public function __call($method, $args)
     {
         if ($this->isMatched) {
-            return new self($this->value, $this->isMatched);
+            return new static($this->value, $this->isMatched);
         }
 
         if ($this->matchOnNative($method) || $this->matchOnClassName($method)) {
             if (isset($args[0])) {
                 if (is_callable($args[0]) && !$args[0] instanceof Monadic) {
-                    return new self($args[0]($this->value), true);
+                    return new static($args[0]($this->value), true);
                 } else {
-                    return new self($args[0], true);
+                    return new static($args[0], true);
                 }
             } else {
-                return new self($this->value, true);
+                return new static($this->value, true);
             }
         } else {
-            return new self($this->value);
+            return new static($this->value);
         }
     }
 
@@ -83,14 +83,14 @@ class Match implements Monadic
     public function any(\Closure $function = null, array $args = [])
     {
         if ($this->isMatched) {
-            return new self($this->value, $this->isMatched);
+            return new static($this->value, $this->isMatched);
         }
 
         if (is_null($function)) {
-            return new self($this->value, true);
+            return new static($this->value, true);
         }
 
-        return new self($this->callFunction($function, $this->value, $args), true);
+        return new static($this->callFunction($function, $this->value, $args), true);
     }
 
     /**
@@ -106,17 +106,17 @@ class Match implements Monadic
     public function test($test, \Closure $function = null, array $args = [])
     {
         if ($this->isMatched) {
-            return new self($this->value, $this->isMatched);
+            return new static($this->value, $this->isMatched);
         }
         if ($this->value === $test ) {
             if (is_null($function)) {
-                return new self($this->value, true);
+                return new static($this->value, true);
             }
 
-            return new self($this->callFunction($function, $this->value, $args), true);
+            return new static($this->callFunction($function, $this->value, $args), true);
         }
 
-        return new self($this->value());
+        return new static($this->value());
     }
 
 
@@ -146,7 +146,7 @@ class Match implements Monadic
      */
     public function bind(\Closure $function, array $args = [])
     {
-        return new self($this->callFunction($function, $this->value, $args), $this->isMatched);
+        return new static($this->callFunction($function, $this->value, $args), $this->isMatched);
     }
 
     /**
@@ -158,7 +158,7 @@ class Match implements Monadic
      */
     public static function create($value)
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**

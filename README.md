@@ -544,3 +544,5 @@ V1.2.0 Added Collection
 V1.2.1 fixes on Collection
 
 V1.2.2 add sort order for vUnion method
+
+V1.2.3 allow descendent monadic types

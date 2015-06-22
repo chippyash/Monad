@@ -33,10 +33,10 @@ class Failure extends FTry
     public static function create($value = null)
     {
         if ($value instanceof \Exception) {
-            return new self($value);
+            return new static($value);
         }
 
-        return new self(new \RuntimeException('Creating Failure with no exception'));
+        return new static(new \RuntimeException('Creating Failure with no exception'));
     }
 
     /**
@@ -49,7 +49,7 @@ class Failure extends FTry
      */
     public function bind(\Closure $function, array $args = [])
     {
-        return new self($this->value);
+        return new static($this->value);
     }
 
     /**

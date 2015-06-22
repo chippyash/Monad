@@ -61,7 +61,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public static function create($value)
     {
-        return new self($value);
+        return new static($value);
     }
 
 
@@ -80,7 +80,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
             $result[$key] = $this->callFunction($function, $value, $args);
         }
 
-        return new self($result);
+        return new static($result);
     }
 
     /**
@@ -192,10 +192,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function diff(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new self(\array_diff($this->value(), $other->value()), $this->type);
+            return new static(\array_diff($this->value(), $other->value()), $this->type);
         }
 
-        return new self(\array_udiff($this->value(), $other->value(), $function), $this->type);
+        return new static(\array_udiff($this->value(), $other->value(), $function), $this->type);
     }
 
     /**
@@ -215,10 +215,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function intersect(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new self(\array_intersect($this->value(), $other->value()), $this->type);
+            return new static(\array_intersect($this->value(), $other->value()), $this->type);
         }
 
-        return new self(\array_uintersect($this->value(), $other->value(), $function), $this->type);
+        return new static(\array_uintersect($this->value(), $other->value(), $function), $this->type);
     }
 
     /**
@@ -232,7 +232,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function vUnion(Collection $other, $sortOrder = SORT_REGULAR)
     {
-        return new self(
+        return new static(
             \array_unique(
                 \array_merge($this->value(), $other->value())
                 , $sortOrder)
@@ -250,7 +250,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function kUnion(Collection $other)
     {
-        return new self($this->value() + $other->value(), $this->type);
+        return new static($this->value() + $other->value(), $this->type);
     }
 
     /**
@@ -261,7 +261,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function head()
     {
-        return new self(array_slice($this->value(), 0, 1));
+        return new static(array_slice($this->value(), 0, 1));
     }
 
     /**
@@ -271,7 +271,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function tail()
     {
-        return new self(array_slice($this->value(), 1));
+        return new static(array_slice($this->value(), 1));
     }
 
 

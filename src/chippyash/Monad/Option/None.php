@@ -32,7 +32,7 @@ class None extends Option
      */
     public static function create($value = null)
     {
-       return new self();
+       return new static();
     }
 
     /**
@@ -45,7 +45,7 @@ class None extends Option
      */
     public function bind(\Closure $function, array $args = [])
     {
-        return new self();
+        return new static();
     }
 
     /**
