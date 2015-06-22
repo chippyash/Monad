@@ -226,12 +226,18 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      * and the other Collection. Note that keys may be discarded and new ones set
      *
      * @param Collection $other
+     * @param int $sortOrder arrayUnique sort order. one of SORT_...
      *
      * @return Collection
      */
-    public function vUnion(Collection $other)
+    public function vUnion(Collection $other, $sortOrder = SORT_REGULAR)
     {
-        return new self(\array_unique(\array_merge($this->value(), $other->value())), $this->type);
+        return new self(
+            \array_unique(
+                \array_merge($this->value(), $other->value())
+                , $sortOrder)
+            , $this->type
+        );
     }
 
     /**
