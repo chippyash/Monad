@@ -58,10 +58,26 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Collection', Collection::create(['foo']));
     }
 
+    public function tesYouCanBindAFunctionToTheEntireCollectionAndReturnACollection()
+    {
+        $sut = Collection::create([2,3,4,5,6]);
+        //function returns an array
+        $f = function($c){
+            return array_filter($c, function($v){return $v<3;});
+        };
+        $this->assertEquals([2], $sut->bind($f)->value());
+        //function returns a single value - converted to collection
+        $f2 = function($c){
+            return 'foo';
+        };
+        $this->assertEquals(['foo'], $sut->bind($f2)->value());
+
+    }
+
     public function testYouCanBindAFunctionToEachMemberOfTheCollectionAndReturnACollection()
     {
         $sut = Collection::create([2,3,4,5,6]);
-        $res = $sut->bind(function($v){return $v * 2;});
+        $res = $sut->each(function($v){return $v * 2;});
         $this->assertEquals([4,6,8,10,12], $res->value());
     }
 

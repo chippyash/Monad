@@ -64,6 +64,21 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
         return new static($value);
     }
 
+    /**
+     * Bind monad with function.  Function is in form f($value){}
+     * You can pass additional parameters in the $args array in which case your
+     * function should be in the form f($value, $arg1, ..., $argN)
+     *
+     * @param \Closure $function
+     * @param array $args additional arguments to pass to function
+     *
+     * @return Collection
+     */
+    public function bind(\Closure $function, array $args = [])
+    {
+        $res = $this->callFunction($function, $this->value, $args);
+        return $this::create(is_array($res)?:[$res]);
+    }
 
     /**
      * Monadic Interface
@@ -73,7 +88,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      *
      * @return Collection
      */
-    public function bind(\Closure $function, array $args = [])
+    public function each(\Closure $function, array $args = [])
     {
         $result = [];
         foreach($this->value as $key=> $value) {

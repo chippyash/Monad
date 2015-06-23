@@ -403,6 +403,20 @@ echo $s1->tail()->value()[0] // 2
 echo $s1->tail()->value()[3] // 7
 </pre>
 
+There are two function mapping methods for a Collection:
+
+- the standard Monadic bind(), whose function takes the entire `value array` of the 
+Collection as its parameter. You should return an array as a result of the function
+but in the event that you do not, it will be forced to array. In either case, the
+result is wrapped as a new Collection.
+
+- the each() method.  Like bind(), this takes a function and an optional array of 
+additional parameter values to pass on.  However, the each function is called for
+each member of the collection.  The results of the function are collected into a new 
+Collection and returned.  In this way, it behaves rather like the PHP native array_map.
+
+Note that you can change the base type of a resultant Collection as a result of bind() and each().
+
 I chose Collection as the name as it doesn't clash with `list` which is a PHP reserved name.
 In essence, Collection will to all intents and purposes be a List, but for die hard PHPers
 still behave as an array.
@@ -546,3 +560,5 @@ V1.2.1 fixes on Collection
 V1.2.2 add sort order for vUnion method
 
 V1.2.3 allow descendent monadic types
+
+V1.2.4 add each() method to Collection

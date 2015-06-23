@@ -71,6 +71,7 @@ class Collection <<ArrayAccess, IteratorAggregate, Countable>> {
     kUnion(Collection:other):Collection
     head():Collection
     tail():Collection
+    each():Collection
 }
 
 Monadic <-- Monad
