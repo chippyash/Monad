@@ -48,7 +48,7 @@ Try and For Comprehension language constructs.  PHP doesn't have these. This lib
 
 - Match
 - FTry
-- FFor (TBC)
+- FFor This is provided in the [Assembly-Builder package](https://github.com/chippyash/Assembly-Builder)
  
 Key to functional programming is the use of strict typing and elevating functions as
 first class citizens within the language syntax. PHP5.4+ allows functions to be used as
@@ -77,7 +77,8 @@ The Monadic Interface supplied here defines
 $ret = $m->bind(function($val, $mult){return $val * $mult;}, [4]);
 </pre>
   Bear in mind that you can use the `use` clause as normal when defining your function 
-    to expose external parameter values
+    to expose external parameter values. Caveat: start using this stuff in pure Async
+    PHP programming and you can't use the `use` clause. You have been warned!
     
     
 - value():mixed - the return() method as `return` is a reserved word in PHP
@@ -327,12 +328,24 @@ with an underscore e.g. to test for `Monad\Option` use `Monad_Option`
 
 #### Collection
 
-The Monad Collection provides a structured array that behaves as a Monad.  
+The Monad Collection provides a structured array that behaves as a Monad.  It is based
+on the SPL ArrayObject.
 
-Very important to note however is that unlike a PHP array, 
-the Collection is type specific, i.e. you specify Collection specifically or by default
-as the first member of its construction array.  
+Very important to note however is that unlike a PHP array, the Collection is type 
+specific, i.e. you specify Collection type specifically or by default as the first member 
+of its construction array.  
 
+Another 'gotcha': As the Collection is an object, calling Collection->value() will
+ just return the Collection itself. If you want to get a PHP array from the Collection
+ then use `toArray()` which proxies the underlying `getArrayCopy()` and is provided
+ as most PHPers are familiar with `toArray` as being a missing 'magic' call.
+ 
+Why re-invent the wheel? ArrayObject (underpinning Collection,) behaves in subtly 
+ different ways than a plain vanilla array. One: it's an object and can therefore
+ be passed by reference, Two: because of One, it (hopefully TBC,) stops segfaults
+ occurring in a multi thread environment.  Even if Two doesn't pan out, then One still
+  holds.
+ 
 <pre>
 use Monad\Collection;
 
@@ -358,7 +371,7 @@ if (!isset($c[6]) {
  
 Although the Collection implements
  the ArrayAccess interface, trying to set or unset a value `$mCollection[0] = 'foo'` or
- `unset($mCollection[0])` *will* throw an exception, as Collections are immutable.
+ `unset($mCollection[0])` *will* throw an exception, as Collections are *immutable*.
  
 As usual, this is not really a problem, as you can bind() on a Collection to return
   another Collection, (which can contain values of a different type.)  Wherever possible, 
@@ -398,24 +411,30 @@ You can get the head and the tail of a collection:
 
 <pre>
 $s1 = Collection::create([1, 2, 3, 6, 7]);
-echo $s1->head()->value()[0] // 1
-echo $s1->tail()->value()[0] // 2
-echo $s1->tail()->value()[3] // 7
+echo $s1->head()[0] // 1
+echo $s1->tail()[0] // 2
+echo $s1->tail()[3] // 7
 </pre>
 
-There are two function mapping methods for a Collection:
+There are four function mapping methods for a Collection:
 
 - the standard Monadic bind(), whose function takes the entire `value array` of the 
 Collection as its parameter. You should return an array as a result of the function
-but in the event that you do not, it will be forced to array. In either case, the
-result is wrapped as a new Collection.
+but in the event that you do not, it will be forced to a Collection.
 
 - the each() method.  Like bind(), this takes a function and an optional array of 
 additional parameter values to pass on.  However, the each function is called for
 each member of the collection.  The results of the function are collected into a new 
 Collection and returned.  In this way, it behaves rather like the PHP native array_map.
 
-Note that you can change the base type of a resultant Collection as a result of bind() and each().
+- the reduce() method.  Acts just like array_reduce and returns a single value as a result
+of function passed in as a paramter.
+
+- the filter() method. Acts just like array_filter, but returns a new Collection as a 
+result of the reduction.
+
+Note that you can change the base type of a resultant Collection as a result these 
+mapping methods().
 
 I chose Collection as the name as it doesn't clash with `list` which is a PHP reserved name.
 In essence, Collection will to all intents and purposes be a List, but for die hard PHPers

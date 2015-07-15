@@ -58,19 +58,19 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Collection', Collection::create(['foo']));
     }
 
-    public function tesYouCanBindAFunctionToTheEntireCollectionAndReturnACollection()
+    public function testYouCanBindAFunctionToTheEntireCollectionAndReturnACollection()
     {
         $sut = Collection::create([2,3,4,5,6]);
         //function returns an array
         $f = function($c){
-            return array_filter($c, function($v){return $v<3;});
+            return $c[0];
         };
-        $this->assertEquals([2], $sut->bind($f)->value());
+        $this->assertEquals([2], $sut->bind($f)->value()->getArrayCopy());
         //function returns a single value - converted to collection
         $f2 = function($c){
             return 'foo';
         };
-        $this->assertEquals(['foo'], $sut->bind($f2)->value());
+        $this->assertEquals(['foo'], $sut->bind($f2)->value()->getArrayCopy());
 
     }
 
@@ -78,7 +78,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $sut = Collection::create([2,3,4,5,6]);
         $res = $sut->each(function($v){return $v * 2;});
-        $this->assertEquals([4,6,8,10,12], $res->value());
+        $this->assertInstanceOf('Monad\Collection', $res->value());
+        $this->assertEquals([4,6,8,10,12], $res->value()->getArrayCopy());
     }
 
     public function testYouCanCountTheItemsInTheCollection()
@@ -129,14 +130,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Collection', $s3);
     }
 
-    public function testFlatteningACollectionOfCollectionsWillReturnPHPArrayOfArrays()
+    public function testFlatteningACollectionOfCollectionsWillReturnACollection()
     {
         $s1 = Collection::create([1,2,3]);
         $s2 = Collection::create([5,6,7]);
         $flattened = Collection::create([$s1, $s2])->flatten();
-        $this->assertInternalType('array', $flattened);
+        $this->assertInstanceOf('Monad\Collection', $flattened);
         foreach ($flattened as $value) {
-            $this->assertInternalType('array', $value);
+            $this->assertInstanceOf('Monad\Collection', $value);
         }
     }
 
@@ -144,7 +145,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
-        $this->assertEquals([1,2,3], $s1->diff($s2)->flatten());
+        $this->assertEquals([1,2,3], $s1->diff($s2)->flatten()->toArray());
     }
 
     public function testYouCanChainDiffMethodsToActOnArbitraryNumbersOfCollections()
@@ -154,7 +155,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s3 = Collection::create([1]);
         $s4 = Collection::create([9]);
 
-        $this->assertEquals([2,3], array_values($s1->diff($s2)->diff($s3)->diff($s4)->flatten()));
+        $this->assertEquals([2,3], array_values($s1->diff($s2)->diff($s3)->diff($s4)->flatten()->toArray()));
     }
 
     public function testYouCanSupplyAnOptionalComparatorFunctionToDiffMethod()
@@ -164,14 +165,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $f = function($a, $b){
             return ($a<$b ? -1 : ($a>$b ? 1 : 0));
         };
-        $this->assertEquals([1,2,3], $s1->diff($s2, $f)->flatten());
+        $this->assertEquals([1,2,3], $s1->diff($s2, $f)->flatten()->toArray());
     }
 
     public function testYouCanGetTheIntersectionOfTwoCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
-        $this->assertEquals([6,7], array_values($s1->intersect($s2)->flatten()));
+        $this->assertEquals([6,7], array_values($s1->intersect($s2)->flatten()->toArray()));
     }
 
     public function testYouCanChainIntersectMethodsToActOnArbitraryNumbersOfCollections()
@@ -180,7 +181,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s2 = Collection::create([6,7]);
         $s3 = Collection::create([7]);
 
-        $this->assertEquals([7], array_values($s1->intersect($s2)->intersect($s3)->flatten()));
+        $this->assertEquals([7], array_values($s1->intersect($s2)->intersect($s3)->flatten()->toArray()));
     }
 
     public function testYouCanSupplyAnOptionalComparatorFunctionToIntersectMethod()
@@ -190,14 +191,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $f = function($a, $b){
             return ($a<$b ? -1 : ($a>$b ? 1 : 0));
         };
-        $this->assertEquals([6, 7], array_values($s1->intersect($s2, $f)->flatten()));
+        $this->assertEquals([6, 7], array_values($s1->intersect($s2, $f)->flatten()->toArray()));
     }
 
     public function testYouCanGetTheUnionOfValuesOfTwoCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([3, 6, 7, 8]);
-        $this->assertEquals([1,2,3,6,7,8], array_values($s1->vUnion($s2)->flatten()));
+        $this->assertEquals([1,2,3,6,7,8], array_values($s1->vUnion($s2)->flatten()->toArray()));
     }
 
     public function testYouCanChainTheUnionOfValuesOfTwoCollections()
@@ -205,14 +206,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([3, 6, 7, 8]);
         $s3 = Collection::create([7, 8, 9, 10]);
-        $this->assertEquals([1,2,3,6,7,8,9,10], array_values($s1->vUnion($s2)->vUnion($s3)->flatten()));
+        $this->assertEquals([1,2,3,6,7,8,9,10], array_values($s1->vUnion($s2)->vUnion($s3)->flatten()->toArray()));
     }
 
     public function testYouCanGetTheUnionOfKeysOfTwoCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([0, 0, 3, 6, 7, 8]);
-        $this->assertEquals([0=>1,1=>2,2=>3,3=>6,4=>7, 5=>8], $s1->kUnion($s2)->flatten());
+        $this->assertEquals([0=>1,1=>2,2=>3,3=>6,4=>7, 5=>8], $s1->kUnion($s2)->flatten()->toArray());
     }
 
     public function testYouCanChainTheUnionOfKeysOfTwoCollections()
@@ -222,7 +223,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s3 = Collection::create([0, 0, 0, 7, 8, 9, 10]);
         $this->assertEquals(
             [0=>1, 1=>2, 2=>3, 3=>6,4=>7, 5=>8, 6=>10],
-            $s1->kUnion($s2)->kUnion($s3)->flatten()
+            $s1->kUnion($s2)->kUnion($s3)->flatten()->toArray()
         );
     }
 
@@ -245,12 +246,32 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     public function testTheHeadOfACollectionIsItsFirstMember()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
-        $this->assertEquals([1], $s1->head()->flatten());
+        $this->assertEquals([1], $s1->head()->flatten()->toArray());
     }
 
     public function testTheTailOfACollectionIsAllButItsFirstMember()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
-        $this->assertEquals([2, 3, 6, 7], $s1->tail()->flatten());
+        $this->assertEquals([2, 3, 6, 7], $s1->tail()->flatten()->toArray());
+    }
+
+    public function testYouCanFilterACollectionWithAClosure()
+    {
+        $f = function($v){return $v>3;};
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals([3=>6, 4=>7], $s1->filter($f)->toArray());
+    }
+
+    public function testYouCanReduceACollectionToASingleValueWithAClosure()
+    {
+        $f = function($v, $carry){return $carry + $v;};
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals(29, $s1->reduce($f, 10));
+    }
+
+    public function testYouCanReferenceACollectionAsThoughItWasAnArray()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals(2, $s1[1]);
     }
 }

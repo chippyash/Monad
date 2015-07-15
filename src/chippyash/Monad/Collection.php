@@ -18,10 +18,8 @@ use Monad\Option\Some;
 /**
  * Key value pair collection object
  */
-class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadic
+class Collection extends \ArrayObject implements Monadic
 {
-    use ReturnValueAble;
-    use CallFunctionAble;
 
     /**
      * The Type of the items in the collection
@@ -45,11 +43,14 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
             ->string(function() use($type) {return $this->setType($type);})
             ->null(function() use ($value) {return $this->setTypeFromValue($value);});
 
-        Match::on($setType->value())
-            ->Monad_FTry_Success(function() use ($value) {return $this->setValue($value);})
-            ->Monad_FTry_Failure(function() use ($setType) {return $setType->value();})
-            ->value()
-            ->pass();
+        parent::__construct(
+            Match::on($setType->value())
+                ->Monad_FTry_Success(function() use ($value) {return $this->setValue($value);})
+                ->Monad_FTry_Failure(function() use ($setType) {return $setType->value();})
+                ->value()
+                ->pass()
+                ->value()
+        );
     }
 
     /**
@@ -76,7 +77,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function bind(\Closure $function, array $args = [])
     {
-        $res = $this->callFunction($function, $this->value, $args);
+        $res = $this->callFunction($function, $this, $args);
         return $this::create(is_array($res)?:[$res]);
     }
 
@@ -91,7 +92,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function each(\Closure $function, array $args = [])
     {
         $result = [];
-        foreach($this->value as $key=> $value) {
+        foreach($this as $key=> $value) {
             $result[$key] = $this->callFunction($function, $value, $args);
         }
 
@@ -99,16 +100,56 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     }
 
     /**
+     * Reduce the collection using closure to a single value
+     *
+     * @see array_reduce
+     *
+     * @param \Closure $function
+     * @param mixed $initial optional initial value
+     *
+     * @return mixed
+     */
+    public function reduce(\Closure $function, $initial = null)
+    {
+        return \array_reduce($this->getArrayCopy(), $function, $initial);
+    }
+
+    /**
+     * Filter collection using closure to return another Collection
+     *
+     * @see array_filter
+     *
+     * @param \Closure $function
+     *
+     * @return Collection
+     */
+    public function filter(\Closure $function)
+    {
+        return new static(\array_filter($this->getArrayCopy(), $function));
+    }
+
+    /**
+     * Monadic Interface
+     * Return this collection as value
+     *
+     * @return Collection
+     */
+    public function value()
+    {
+        return $this;
+    }
+
+    /**
      * Return value of Monad as a base type.
      * If value === \Closure, will evaluate the function and return it's value
      * If value === \Monadic, will recurse
      *
-     * @return mixed
+     * @return Collection
      */
     public function flatten()
     {
         $ret = [];
-        foreach ($this->value as $key => $value)
+        foreach ($this as $key => $value)
         {
             $ret[$key] = Match::on($value)
                 ->Closure(function($v){return $v();})
@@ -117,31 +158,16 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
                 ->flatten();
         }
 
-        return $ret;
+        return new static($ret);
     }
 
     /**
-     * ArrayAccess Interface
-     *
-     * @param mixed $offset
-     *
-     * @return bool
+     * Return collection as an array
+     * @return array
      */
-    public function offsetExists($offset)
+    public function toArray()
     {
-        return isset($this->value[$offset]);
-    }
-
-    /**
-     * ArrayAccess Interface
-     *
-     * @param mixed $offset
-     *
-     * @return mixed|null
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->value[$offset]) ? $this->value[$offset] : null;
+        return $this->getArrayCopy();
     }
 
     /**
@@ -170,26 +196,6 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     }
 
     /**
-     * IteratorAggregate Interface
-     *
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->value);
-    }
-
-    /**
-     * Countable Interface
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->value);
-    }
-
-    /**
      * Compares this collection against another collection and returns a new Collection
      * with the values in this collection that are not present in the other collection.
      * Note that keys are preserved
@@ -207,10 +213,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function diff(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new static(\array_diff($this->value(), $other->value()), $this->type);
+            return new static(\array_diff($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
         }
 
-        return new static(\array_udiff($this->value(), $other->value(), $function), $this->type);
+        return new static(\array_udiff($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
     }
 
     /**
@@ -230,10 +236,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     public function intersect(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
-            return new static(\array_intersect($this->value(), $other->value()), $this->type);
+            return new static(\array_intersect($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
         }
 
-        return new static(\array_uintersect($this->value(), $other->value(), $function), $this->type);
+        return new static(\array_uintersect($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
     }
 
     /**
@@ -249,7 +255,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
     {
         return new static(
             \array_unique(
-                \array_merge($this->value(), $other->value())
+                \array_merge($this->getArrayCopy(), $other->getArrayCopy())
                 , $sortOrder)
             , $this->type
         );
@@ -265,7 +271,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function kUnion(Collection $other)
     {
-        return new static($this->value() + $other->value(), $this->type);
+        return new static($this->getArrayCopy() + $other->getArrayCopy(), $this->type);
     }
 
     /**
@@ -276,7 +282,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function head()
     {
-        return new static(array_slice($this->value(), 0, 1));
+        return new static(array_slice($this->getArrayCopy(), 0, 1));
     }
 
     /**
@@ -286,7 +292,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
      */
     public function tail()
     {
-        return new static(array_slice($this->value(), 1));
+        return new static(array_slice($this->getArrayCopy(), 1));
     }
 
 
@@ -376,8 +382,29 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, Monadi
             }
         }
 
-        $this->value = $values;
-
         return new Success($values);
+    }
+
+    /**
+     * Call function on value
+     *
+     * @param \Closure $function
+     * @param mixed $value
+     * @param array $args additional arguments to pass to function
+     *
+     * @return Monadic
+     */
+    protected function callFunction(\Closure $function, $value, array $args = [])
+    {
+        if ($value instanceof Monadic && !$value instanceof Collection) {
+            return $value->bind($function, $args);
+        }
+        if ($value instanceof \Closure) {
+            $val = $value();
+        } else {
+            $val = $value;
+        }
+        array_unshift($args, $val);
+        return call_user_func_array($function, $args);
     }
 }
