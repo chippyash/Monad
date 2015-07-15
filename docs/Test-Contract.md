@@ -27,6 +27,7 @@
 *  When constructing a collection you must have same type values
 *  Constructing a collection with dissimilar types will cause an exception
 *  You can create a collection
+*  You can bind a function to the entire collection and return a collection
 *  You can bind a function to each member of the collection and return a collection
 *  You can count the items in the collection
 *  You can get an iterator for a collection
@@ -35,7 +36,7 @@
 *  You can get a collection member as an array offset
 *  You can test if a collection member exists as an array offset
 *  You can create a collection of collections
-*  Flattening a collection of collections will return p h p array of arrays
+*  Flattening a collection of collections will return a collection
 *  You can get the difference between two collections
 *  You can chain diff methods to act on arbitrary numbers of collections
 *  You can supply an optional comparator function to diff method
@@ -50,6 +51,9 @@
 *  Performing a key union the dissimilar collections will throw an exception
 *  The head of a collection is its first member
 *  The tail of a collection is all but its first member
+*  You can filter a collection with a closure
+*  You can reduce a collection to a single value with a closure
+*  You can reference a collection as though it was an array
 
 ## Monad\Test\FTry
 
