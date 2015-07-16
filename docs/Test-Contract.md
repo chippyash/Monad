@@ -54,6 +54,7 @@
 *  You can filter a collection with a closure
 *  You can reduce a collection to a single value with a closure
 *  You can reference a collection as though it was an array
+*  Value method proxies to collection get array copy method
 
 ## Monad\Test\FTry
 

@@ -61,25 +61,34 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     public function testYouCanBindAFunctionToTheEntireCollectionAndReturnACollection()
     {
         $sut = Collection::create([2,3,4,5,6]);
-        //function returns an array
+        //function returns a single value - converted to a collection
         $f = function($c){
             return $c[0];
         };
-        $this->assertEquals([2], $sut->bind($f)->value()->getArrayCopy());
+        $this->assertEquals([2], $sut->bind($f)->getArrayCopy());
         //function returns a single value - converted to collection
         $f2 = function($c){
             return 'foo';
         };
-        $this->assertEquals(['foo'], $sut->bind($f2)->value()->getArrayCopy());
-
+        $this->assertEquals(['foo'], $sut->bind($f2)->getArrayCopy());
+        //function returns a collection
+        $f3 = function($c) {
+            return new Collection(array_flip($c->toArray()));
+        };
+        $this->assertEquals([2=>0, 3=>1, 4=>2, 5=>3, 6=>4], $sut->bind($f3)->getArrayCopy());
+        //function returns and array - converted to a collection
+        $f4 = function($c){
+            return $c->toArray();
+        };
+        $this->assertEquals([2,3,4,5,6], $sut->bind($f4)->getArrayCopy());
     }
 
     public function testYouCanBindAFunctionToEachMemberOfTheCollectionAndReturnACollection()
     {
         $sut = Collection::create([2,3,4,5,6]);
         $res = $sut->each(function($v){return $v * 2;});
-        $this->assertInstanceOf('Monad\Collection', $res->value());
-        $this->assertEquals([4,6,8,10,12], $res->value()->getArrayCopy());
+        $this->assertInstanceOf('Monad\Collection', $res);
+        $this->assertEquals([4,6,8,10,12], $res->getArrayCopy());
     }
 
     public function testYouCanCountTheItemsInTheCollection()
@@ -273,5 +282,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $this->assertEquals(2, $s1[1]);
+    }
+
+    public function testValueMethodProxiesToCollectionGetArrayCopyMethod()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $this->assertEquals($s1->toArray(), $s1->getArrayCopy());
     }
 }

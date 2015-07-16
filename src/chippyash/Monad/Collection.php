@@ -78,7 +78,7 @@ class Collection extends \ArrayObject implements Monadic
     public function bind(\Closure $function, array $args = [])
     {
         $res = $this->callFunction($function, $this, $args);
-        return $this::create(is_array($res)?:[$res]);
+        return $res instanceof Collection ? $res :$this::create(is_array($res)? $res :[$res]);
     }
 
     /**
