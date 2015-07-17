@@ -33,7 +33,7 @@
 *  You can get an iterator for a collection
 *  You cannot unset a collection member by default
 *  You can unset a collection member if you set the mutable flag
-*  You cannot set a collection member
+*  You cannot set a collection member by default
 *  You can set a collection member if mutable flag is set
 *  You can get a collection member as an array offset
 *  You can test if a collection member exists as an array offset
@@ -57,6 +57,7 @@
 *  You can reduce a collection to a single value with a closure
 *  You can reference a collection as though it was an array
 *  Value method proxies to collection get array copy method
+*  You can flip a collection
 
 ## Monad\Test\FTry
 

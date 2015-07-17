@@ -133,9 +133,20 @@ class Collection extends \ArrayObject implements Monadic
         return new static(\array_filter($this->getArrayCopy(), $function));
     }
 
+    /**
+     * Flip keys and values.
+     * Returns new Collection
+     *
+     * @return Collection
+     */
     public function flip()
     {
+        $new = (new static([], $this->type))->setMutable();
+        foreach($this as $k => $v) {
+            $new[$v] = $k;
+        }
 
+        return $new->setMutable(false);
     }
 
     /**

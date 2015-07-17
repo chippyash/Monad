@@ -119,7 +119,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException BadMethodCallException
      */
-    public function testYouCannotSetACollectionMember()
+    public function testYouCannotSetACollectionMemberByDefault()
     {
         Collection::create([1,2,3])->offsetSet(2, 6);
     }
@@ -302,5 +302,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $this->assertEquals($s1->toArray(), $s1->getArrayCopy());
+    }
+
+    public function testYouCanFlipACollection()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7])->flip()->toArray();
+        $this->assertEquals([1=>0, 2=>1, 3=>2, 6=>3, 7=>4], $s1);
     }
 }
