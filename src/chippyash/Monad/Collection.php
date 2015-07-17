@@ -247,6 +247,14 @@ class Collection extends \ArrayObject implements Monadic
     }
 
     /**
+     * @deprecated - use vIntersect
+     */
+    public function intersect(Collection $other, \Closure $function = null)
+    {
+        return $this->vIntersect($other, $function);
+    }
+
+    /**
      * Returns a Collection containing all the values of this Collection that are present
      * in the other Collection. Note that keys are preserved
      *
@@ -260,13 +268,36 @@ class Collection extends \ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function intersect(Collection $other, \Closure $function = null)
+    public function vIntersect(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
             return new static(\array_intersect($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
         }
 
         return new static(\array_uintersect($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
+    }
+
+    /**
+     * Returns a Collection containing all the values of this Collection that are present
+     * in the other Collection. Keys are used for comparison
+     *
+     * If the optional comparison function is supplied it must have signature
+     * function(mixed $a, mixed $b){}. The comparison function must return an integer
+     * less than, equal to, or greater than zero if the first argument is considered
+     * to be respectively less than, equal to, or greater than the second.
+     *
+     * @param Collection $other
+     * @param callable $function Optional function to compare values
+     *
+     * @return Collection
+     */
+    public function kIntersect(Collection $other, \Closure $function = null)
+    {
+        if (is_null($function)) {
+            return new static(\array_intersect_key($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
+        }
+
+        return new static(\array_intersect_ukey($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
     }
 
     /**

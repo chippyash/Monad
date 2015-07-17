@@ -42,9 +42,12 @@
 *  You can get the difference between two collections
 *  You can chain diff methods to act on arbitrary numbers of collections
 *  You can supply an optional comparator function to diff method
-*  You can get the intersection of two collections
-*  You can chain intersect methods to act on arbitrary numbers of collections
-*  You can supply an optional comparator function to intersect method
+*  You can get the intersection of two collections by value
+*  You can get the intersection of two collections by key
+*  You can chain value intersect methods to act on arbitrary numbers of collections
+*  You can chain key intersect methods to act on arbitrary numbers of collections
+*  You can supply an optional comparator function to the value intersect method
+*  You can supply an optional comparator function to the key intersect method
 *  You can get the union of values of two collections
 *  You can chain the union of values of two collections
 *  You can get the union of keys of two collections

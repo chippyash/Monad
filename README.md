@@ -392,10 +392,11 @@ And the intersection:
 <pre>
 $s1 = Collection::create([1, 2, 3, 6, 7]);
 $s2 = Collection::create([6,7]);
-$s3 = $s1->intersect($s2);
+$s3 = $s1->vIntersect($s2); //intersect on values
+$s4 = $s1->kIntersect($s2); //intersect on keys
 </pre>
 
-Both `diff` and `intersect` can take a second optional Closure parameter which is used
+`diff`, `vIntersect` and `kIntersect` can take a second optional Closure parameter which is used
 as the comparator method.
 
 You can get the union of two collections, either by value or key:

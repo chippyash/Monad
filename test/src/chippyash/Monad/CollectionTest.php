@@ -191,30 +191,56 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([1,2,3], $s1->diff($s2, $f)->flatten()->toArray());
     }
 
-    public function testYouCanGetTheIntersectionOfTwoCollections()
+    public function testYouCanGetTheIntersectionOfTwoCollectionsByValue()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
-        $this->assertEquals([6,7], array_values($s1->intersect($s2)->flatten()->toArray()));
+        $this->assertEquals([6,7], array_values($s1->vIntersect($s2)->flatten()->toArray()));
     }
 
-    public function testYouCanChainIntersectMethodsToActOnArbitraryNumbersOfCollections()
+    public function testYouCanGetTheIntersectionOfTwoCollectionsByKey()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $this->assertEquals([1,2], array_values($s1->kIntersect($s2)->flatten()->toArray()));
+    }
+
+    public function testYouCanChainValueIntersectMethodsToActOnArbitraryNumbersOfCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
         $s3 = Collection::create([7]);
 
-        $this->assertEquals([7], array_values($s1->intersect($s2)->intersect($s3)->flatten()->toArray()));
+        $this->assertEquals([7], array_values($s1->vIntersect($s2)->vIntersect($s3)->flatten()->toArray()));
     }
 
-    public function testYouCanSupplyAnOptionalComparatorFunctionToIntersectMethod()
+    public function testYouCanChainKeyIntersectMethodsToActOnArbitraryNumbersOfCollections()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $s3 = Collection::create([7]);
+
+        $this->assertEquals([0=>1], array_values($s1->kIntersect($s2)->kIntersect($s3)->flatten()->toArray()));
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToTheValueIntersectMethod()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
         $f = function($a, $b){
             return ($a<$b ? -1 : ($a>$b ? 1 : 0));
         };
-        $this->assertEquals([6, 7], array_values($s1->intersect($s2, $f)->flatten()->toArray()));
+        $this->assertEquals([6, 7], array_values($s1->vIntersect($s2, $f)->flatten()->toArray()));
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToTheKeyIntersectMethod()
+    {
+        $s1 = Collection::create([1, 2, 3, 6, 7]);
+        $s2 = Collection::create([6,7]);
+        $f = function($a, $b){
+            return ($a<$b ? -1 : ($a>$b ? 1 : 0));
+        };
+        $this->assertEquals([0=>1, 1=>2], array_values($s1->kIntersect($s2, $f)->flatten()->toArray()));
     }
 
     public function testYouCanGetTheUnionOfValuesOfTwoCollections()
