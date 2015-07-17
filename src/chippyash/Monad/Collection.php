@@ -331,7 +331,7 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function setMutable($flag = true)
     {
-        $this->mutable = boolval($flag);
+        $this->mutable = (bool) $flag;
 
         return $this;
     }
