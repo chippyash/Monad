@@ -31,8 +31,10 @@
 *  You can bind a function to each member of the collection and return a collection
 *  You can count the items in the collection
 *  You can get an iterator for a collection
-*  You cannot unset a collection member
+*  You cannot unset a collection member by default
+*  You can unset a collection member if you set the mutable flag
 *  You cannot set a collection member
+*  You can set a collection member if mutable flag is set
 *  You can get a collection member as an array offset
 *  You can test if a collection member exists as an array offset
 *  You can create a collection of collections
@@ -47,8 +49,8 @@
 *  You can chain the union of values of two collections
 *  You can get the union of keys of two collections
 *  You can chain the union of keys of two collections
-*  Performing a value union the dissimilar collections will throw an exception
-*  Performing a key union the dissimilar collections will throw an exception
+*  Performing a value union with dissimilar collections will throw an exception
+*  Performing a key union with dissimilar collections will throw an exception
 *  The head of a collection is its first member
 *  The tail of a collection is all but its first member
 *  You can filter a collection with a closure

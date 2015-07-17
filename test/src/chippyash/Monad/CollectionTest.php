@@ -104,9 +104,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException BadMethodCallException
      */
-    public function testYouCannotUnsetACollectionMember()
+    public function testYouCannotUnsetACollectionMemberByDefault()
     {
         Collection::create([1,2,3])->offsetUnset(2);
+    }
+
+    public function testYouCanUnsetACollectionMemberIfYouSetTheMutableFlag()
+    {
+        $s1 = Collection::create([1,2,3])->setMutable();
+        unset($s1[2]);
+        $this->assertEquals([1,2], $s1->toArray());
     }
 
     /**
@@ -115,6 +122,13 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     public function testYouCannotSetACollectionMember()
     {
         Collection::create([1,2,3])->offsetSet(2, 6);
+    }
+
+    public function testYouCanSetACollectionMemberIfMutableFlagIsSet()
+    {
+        $s1 = Collection::create([1,2,3])->setMutable();
+        $s1[2] = 6;
+        $this->assertEquals([1, 2, 6], $s1->toArray());
     }
 
     public function testYouCanGetACollectionMemberAsAnArrayOffset()
@@ -239,7 +253,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testPerformingAValueUnionTheDissimilarCollectionsWillThrowAnException()
+    public function testPerformingAValueUnionWithDissimilarCollectionsWillThrowAnException()
     {
         (new Collection([],'string'))->vUnion(new Collection([1]));
     }
@@ -247,7 +261,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testPerformingAKeyUnionTheDissimilarCollectionsWillThrowAnException()
+    public function testPerformingAKeyUnionWithDissimilarCollectionsWillThrowAnException()
     {
         (new Collection([],'string'))->kUnion(new Collection([1]));
     }

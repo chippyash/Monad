@@ -29,6 +29,11 @@ class Collection extends \ArrayObject implements Monadic
     protected $type;
 
     /**
+     * @var bool
+     */
+    private $mutable = false;
+
+    /**
      * Constructor
      *
      * If you do not specify $type, it will be inferred from the first item in the
@@ -128,6 +133,11 @@ class Collection extends \ArrayObject implements Monadic
         return new static(\array_filter($this->getArrayCopy(), $function));
     }
 
+    public function flip()
+    {
+
+    }
+
     /**
      * Monadic Interface
      * Return this collection as value
@@ -180,6 +190,9 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetSet($offset, $value)
     {
+        if ($this->mutable) {
+            return parent::offsetSet($offset, $value);
+        }
         throw new \BadMethodCallException('Cannot set on an immutable Collection');
     }
 
@@ -192,6 +205,9 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetUnset($offset)
     {
+        if ($this->mutable) {
+            return parent::offsetUnset($offset);
+        }
         throw new \BadMethodCallException('Cannot unset an immutable Collection value');
     }
 
@@ -295,6 +311,19 @@ class Collection extends \ArrayObject implements Monadic
         return new static(array_slice($this->getArrayCopy(), 1));
     }
 
+    /**
+     * Set  the collection to be mutable.  Use with care!
+     *
+     * @param bool $flag
+     *
+     * @return $this
+     */
+    public function setMutable($flag = true)
+    {
+        $this->mutable = boolval($flag);
+
+        return $this;
+    }
 
     /**
      * @param string $type
