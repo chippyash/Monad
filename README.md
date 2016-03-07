@@ -2,10 +2,10 @@
 
 ## Quality Assurance
 
-Certified for PHP 5.4+
+Certified for PHP 5.4 - 5.6
 
 [![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
-[![Coverage Status](https://coveralls.io/repos/chippyash/Monad/badge.svg?branch=master)](https://coveralls.io/r/chippyash/Monad?branch=master)
+[![Test Coverage](https://codeclimate.com/github/chippyash/Monad/badges/coverage.svg)](https://codeclimate.com/github/chippyash/Monad/coverage)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
 
 The above badges represent the current development branch.  As a rule, I don't push
@@ -369,9 +369,12 @@ if (!isset($c[6]) {
 }
 </pre>
  
-Although the Collection implements
- the ArrayAccess interface, trying to set or unset a value `$mCollection[0] = 'foo'` or
- `unset($mCollection[0])` *will* throw an exception, as Collections are *immutable*.
+Although the Collection implements the ArrayAccess interface, trying to set or unset 
+a value `$mCollection[0] = 'foo'` or `unset($mCollection[0])` *will* throw an 
+exception, as Collections are *immutable* by default.  In some circumstances, you
+may want to change this.  Use the `setMutable()` method to allow mutability. Use
+`setMutable(false)` to turn it off again, which you should do before returning the
+Collection to any client, as that will expect it to be immutable.
  
 As usual, this is not really a problem, as you can bind() on a Collection to return
   another Collection, (which can contain values of a different type.)  Wherever possible, 

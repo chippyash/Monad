@@ -7,6 +7,8 @@ php:
   - 5.4
   # aliased to a recent 5.5.x version
   - 5.5
+  # aliased to a recent 5.6.x version
+  - 5.6
   # hhvm
   #- hhvm
 
@@ -21,8 +23,7 @@ script:
   - vendor/phpunit/phpunit/phpunit --configuration phpunit.travis.xml --coverage-clover build/logs/clover.xml
 
 after_success:
-    - php vendor/bin/coveralls -v
-    - CODECLIMATE_REPO_TOKEN=4bb5e11a781e977d22fb5b2209b45a08e383a7671524d73b5a12f1424d91c645 ./vendor/bin/test-reporter
+  - ./vendor/bin/test-reporter
 
 # configure notifications (email, IRC, campfire etc)
 notifications:

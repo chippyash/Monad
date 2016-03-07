@@ -293,11 +293,17 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function kIntersect(Collection $other, \Closure $function = null)
     {
-        if (is_null($function)) {
-            return new static(\array_intersect_key($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
-        }
-
-        return new static(\array_intersect_ukey($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
+        return new static(
+            Match::on(Option::create($function))
+                ->Monad_Option_Some(function () use ($other, $function) {
+                    return \array_intersect_ukey($this->getArrayCopy(), $other->getArrayCopy(), $function);
+                })
+                ->Monad_Option_None(function () use ($other) {
+                    return \array_intersect_key($this->getArrayCopy(), $other->getArrayCopy());
+                })
+                ->value(),
+            $this->type
+        );
     }
 
     /**
