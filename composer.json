@@ -1,27 +1,34 @@
 {
-    "name": "chippyash/monad",
-    "description": "Functional programming Monad support",
-    "homepage" : "http://the-matrix.github.io/",
-    "license": "GPL 3.0",
-    "keywords": ["monad","identity","option","match","functional","try","collection"],
-    "authors": [
-        {
-            "name": "Ashley Kitson",
-            "email": "ashley@zf4.biz"
-        }
-    ],
-    "require": {
-        "php":">=5.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.3.0",
-        "mikey179/vfsStream": "1.5.x-dev",
-        "codeclimate/php-test-reporter": "dev-master"
-    },
-    "autoload": {
-        "psr-0": {
-          "Monad\\": "src\\chippyash"
-        }
+  "name": "chippyash/monad",
+  "description": "Functional programming Monad support",
+  "homepage": "http://the-matrix.github.io/",
+  "license": "GPL 3.0",
+  "keywords": [
+    "monad",
+    "identity",
+    "option",
+    "match",
+    "functional",
+    "try",
+    "collection"
+  ],
+  "authors": [
+    {
+      "name": "Ashley Kitson",
+      "email": "ashley@zf4.biz"
     }
-    
+  ],
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.3.0",
+    "mikey179/vfsStream": "1.6.*",
+    "codeclimate/php-test-reporter": "0.3.*"
+  },
+  "autoload": {
+    "psr-0": {
+      "Monad\\": "src\\chippyash"
+    }
+  }
 }
