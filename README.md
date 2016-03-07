@@ -585,3 +585,5 @@ V1.2.2 add sort order for vUnion method
 V1.2.3 allow descendent monadic types
 
 V1.2.4 add each() method to Collection
+
+V1.2.5 move from coveralls to codeclimate
