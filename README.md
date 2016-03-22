@@ -457,6 +457,8 @@ always the latest dev-master. The features it describes may not be in a released
 
 [Test Contract](https://github.com/chippyash/Monad/blob/master/docs/Test-Contract.md) in the docs directory.
 
+Check out [ZF4 Packages](http://zf4.biz/packages?utm_source=github&utm_medium=web&utm_campaign=blinks&utm_content=monad) for more packages
+
 ### UML
 
 ![class diagram](https://github.com/chippyash/Monad/blob/master/docs/monad-classes.png)
@@ -589,3 +591,5 @@ V1.2.3 allow descendent monadic types
 V1.2.4 add each() method to Collection
 
 V1.2.5 move from coveralls to codeclimate
+
+V1.2.6 Add link to packages
