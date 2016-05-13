@@ -9,7 +9,6 @@
 
 namespace Monad\FTry;
 
-
 use Monad\FTry;
 
 class Success extends FTry
@@ -64,5 +63,4 @@ class Success extends FTry
     {
         return $this;
     }
-
 }

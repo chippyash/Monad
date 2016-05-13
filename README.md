@@ -2,7 +2,7 @@
 
 ## Quality Assurance
 
-Certified for PHP 5.4 - 5.6
+Certified for PHP 5.4 - 5.6, 7
 
 [![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
 [![Test Coverage](https://codeclimate.com/github/chippyash/Monad/badges/coverage.svg)](https://codeclimate.com/github/chippyash/Monad/coverage)
@@ -593,3 +593,5 @@ V1.2.4 add each() method to Collection
 V1.2.5 move from coveralls to codeclimate
 
 V1.2.6 Add link to packages
+
+V1.2.7 Code cleanup - verify PHP7 compatibility

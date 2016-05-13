@@ -9,7 +9,6 @@
 
 namespace Monad\FTry;
 
-
 use Monad\FTry;
 
 class Failure extends FTry

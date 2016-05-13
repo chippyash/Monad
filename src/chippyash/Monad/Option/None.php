@@ -21,7 +21,9 @@ class None extends Option
      *
      * @param null $value Ignored
      */
-    public function __construct($value = null){}
+    public function __construct($value = null)
+    {
+    }
 
     /**
      * Always return another instance of None
@@ -32,7 +34,7 @@ class None extends Option
      */
     public static function create($value = null)
     {
-       return new static();
+        return new static();
     }
 
     /**

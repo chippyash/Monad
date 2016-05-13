@@ -8,12 +8,12 @@
  */
 
 namespace Monad;
+
 use Monad\FTry\Success;
 use Monad\FTry\Failure;
 use Monad\FTry;
 use Monad\Option\None;
 use Monad\Option\Some;
-
 
 /**
  * Key value pair collection object
@@ -45,13 +45,22 @@ class Collection extends \ArrayObject implements Monadic
     public function __construct(array $value = [], $type = null)
     {
         $setType = Match::on($type)
-            ->string(function() use($type) {return $this->setType($type);})
-            ->null(function() use ($value) {return $this->setTypeFromValue($value);});
+            ->string(function () use ($type) {
+                return $this->setType($type);
+            })
+            ->null(function () use ($value) {
+                return $this->setTypeFromValue($value);
+
+            });
 
         parent::__construct(
             Match::on($setType->value())
-                ->Monad_FTry_Success(function() use ($value) {return $this->setValue($value);})
-                ->Monad_FTry_Failure(function() use ($setType) {return $setType->value();})
+                ->Monad_FTry_Success(function () use ($value) {
+                    return $this->setValue($value);
+                })
+                ->Monad_FTry_Failure(function () use ($setType) {
+                    return $setType->value();
+                })
                 ->value()
                 ->pass()
                 ->value()
@@ -97,7 +106,7 @@ class Collection extends \ArrayObject implements Monadic
     public function each(\Closure $function, array $args = [])
     {
         $result = [];
-        foreach($this as $key=> $value) {
+        foreach ($this as $key => $value) {
             $result[$key] = $this->callFunction($function, $value, $args);
         }
 
@@ -142,7 +151,7 @@ class Collection extends \ArrayObject implements Monadic
     public function flip()
     {
         $new = (new static([], $this->type))->setMutable();
-        foreach($this as $k => $v) {
+        foreach ($this as $k => $v) {
             $new[$v] = $k;
         }
 
@@ -170,11 +179,14 @@ class Collection extends \ArrayObject implements Monadic
     public function flatten()
     {
         $ret = [];
-        foreach ($this as $key => $value)
-        {
+        foreach ($this as $key => $value) {
             $ret[$key] = Match::on($value)
-                ->Closure(function($v){return $v();})
-                ->Monad_Monadic(function($v){return $v->flatten();})
+                ->Closure(function ($v) {
+                    return $v();
+                })
+                ->Monad_Monadic(function ($v) {
+                    return $v->flatten();
+                })
                 ->any()
                 ->flatten();
         }
@@ -319,8 +331,9 @@ class Collection extends \ArrayObject implements Monadic
     {
         return new static(
             \array_unique(
-                \array_merge($this->getArrayCopy(), $other->getArrayCopy())
-                , $sortOrder)
+                \array_merge($this->getArrayCopy(), $other->getArrayCopy()),
+                $sortOrder
+            )
             , $this->type
         );
     }
@@ -381,12 +394,15 @@ class Collection extends \ArrayObject implements Monadic
     protected function setType($type)
     {
         return Match::on($type)
-            ->string(function($type){
+            ->string(function ($type) {
                 $this->type = $type;
                 return FTry::with($type);
             })
-            ->any(function(){
-                return FTry::with(function(){return new \RuntimeException('Type must be specified by string');});
+            ->any(function () {
+                return FTry::with(function () {
+                    return new \RuntimeException('Type must be specified by string');
+
+                });
             })
             ->value();
     }
@@ -399,7 +415,7 @@ class Collection extends \ArrayObject implements Monadic
     protected function setTypeFromValue(array $value)
     {
         //required to be defined as a var so it can be called in next statement
-        $basicTest = function() use($value) {
+        $basicTest = function () use ($value) {
             if (count($value) > 0) {
                 return array_values($value)[0];
             }
@@ -416,11 +432,13 @@ class Collection extends \ArrayObject implements Monadic
         // allow some separation between what can become a complex match pattern
         $type = Match::on($firstValue)
             ->Monad_Option_Some(
-                function($option){
+                function ($option) {
                     return Option::create(gettype($option->value()));
                 }
             )
-            ->Monad_Option_None(function(){return new None();})
+            ->Monad_Option_None(function () {
+                return new None();
+            })
             ->value();
 
         //@var Option
@@ -430,21 +448,47 @@ class Collection extends \ArrayObject implements Monadic
             Match::on($type)
                 ->Monad_Option_None()
                 ->Monad_Option_Some(
-                    function($v) use($firstValue) {
+                    function ($v) use ($firstValue) {
                         Match::on($v->value())
-                            ->test('object', function($v) use($firstValue) {$this->setType(get_class($firstValue->value())); return new Some($v);})
-                            ->test('string', function($v) {$this->setType($v); return new Some($v);})
-                            ->test('integer', function($v) {$this->setType($v); return new Some($v);})
-                            ->test('double', function($v) {$this->setType($v); return new Some($v);})
-                            ->test('boolean', function($v) {$this->setType($v); return new Some($v);})
-                            ->test('resource', function($v) {$this->setType($v); return new Some($v);})
-                            ->any(function($v){return new None();});
+                            ->test('object', function ($v) use ($firstValue) {
+                                $this->setType(get_class($firstValue->value()));
+                                return new Some($v);
+                            })
+                            ->test('string', function ($v) {
+                                $this->setType($v);
+                                return new Some($v);
+                            })
+                            ->test('integer', function ($v) {
+                                $this->setType($v);
+                                return new Some($v);
+                            })
+                            ->test('double', function ($v) {
+                                $this->setType($v);
+                                return new Some($v);
+                            })
+                            ->test('boolean', function ($v) {
+                                $this->setType($v);
+                                return new Some($v);
+                            })
+                            ->test('resource', function ($v) {
+                                $this->setType($v);
+                                return new Some($v);
+                            })
+                            ->any(function ($v) {
+                                return new None();
+
+                            });
                     }
                 )
-                ->any(function($v){return new None();})
+                ->any(function ($v) {
+                    return new None();
+                })
         );
 
-        return FTry::with(function() use($matchLegalType) {return $matchLegalType->value();});
+        return FTry::with(function () use ($matchLegalType) {
+            return $matchLegalType->value();
+
+        });
     }
 
     /**

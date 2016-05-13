@@ -108,7 +108,7 @@ class Match implements Monadic
         if ($this->isMatched) {
             return new static($this->value, $this->isMatched);
         }
-        if ($this->value === $test ) {
+        if ($this->value === $test) {
             if (is_null($function)) {
                 return new static($this->value, true);
             }
@@ -168,10 +168,10 @@ class Match implements Monadic
     protected function matchOnNative($name)
     {
         switch(strtolower($name)) {
-            case 'string' :
+            case 'string':
                 return is_string($this->value);
-            case 'integer' :
-            case 'int' :
+            case 'integer':
+            case 'int':
             case 'long':
                 return is_int($this->value);
             case 'float':
@@ -180,7 +180,7 @@ class Match implements Monadic
                 return is_double($this->value);
             case 'null':
                 return is_null($this->value);
-            case 'array' :
+            case 'array':
                 return is_array($this->value);
             case 'boolean':
             case 'bool':
@@ -194,13 +194,13 @@ class Match implements Monadic
             case 'dir':
             case 'directory':
                 return is_dir($this->value);
-            case 'object' :
+            case 'object':
                 return is_object($this->value);
-            case 'scalar' :
+            case 'scalar':
                 return is_scalar($this->value);
-            case 'numeric' :
+            case 'numeric':
                 return is_numeric($this->value);
-            case 'resource' :
+            case 'resource':
                 return is_resource($this->value);
             default:
                 return false;
