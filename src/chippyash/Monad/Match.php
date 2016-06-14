@@ -61,23 +61,22 @@ class Match implements Monadic
             if (isset($args[0])) {
                 if (is_callable($args[0]) && !$args[0] instanceof Monadic) {
                     return new static($args[0]($this->value), true);
-                } else {
-                    return new static($args[0], true);
                 }
-            } else {
-                return new static($this->value, true);
+
+                return new static($args[0], true);
             }
-        } else {
-            return new static($this->value);
+
+            return new static($this->value, true);
         }
+
+        return new static($this->value);
     }
 
     /**
      * Match anything. Usually called last in Match chain
      *
-     * @param callable $function
+     * @param callable|\Closure $function
      * @param array $args Optional additional arguments to function
-     *
      * @return Match
      */
     public function any(\Closure $function = null, array $args = [])
@@ -98,7 +97,7 @@ class Match implements Monadic
      *
      * @param mixed $test Value to test against
      *
-     * @param callable $function Function that is used if test is true
+     * @param \Closure $function Function that is used if test is true
      * @param array $args Optional additional arguments to function
      *
      * @return Match

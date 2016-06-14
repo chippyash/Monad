@@ -28,12 +28,10 @@ trait CallFunctionAble
         if ($value instanceof Monadic) {
             return $value->bind($function, $args);
         }
-        if ($value instanceof \Closure) {
-            $val = $value();
-        } else {
-            $val = $value;
-        }
+
+        $val = ($value instanceof \Closure ? $value() : $value);
         array_unshift($args, $val);
+
         return call_user_func_array($function, $args);
     }
 }

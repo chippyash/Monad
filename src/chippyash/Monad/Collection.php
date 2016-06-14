@@ -44,6 +44,7 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function __construct(array $value = [], $type = null)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         $setType = Match::on($type)
             ->string(function () use ($type) {
                 return $this->setType($type);
@@ -53,6 +54,7 @@ class Collection extends \ArrayObject implements Monadic
 
             });
 
+        /** @noinspection PhpUndefinedMethodInspection */
         parent::__construct(
             Match::on($setType->value())
                 ->Monad_FTry_Success(function () use ($value) {
@@ -98,9 +100,8 @@ class Collection extends \ArrayObject implements Monadic
     /**
      * Monadic Interface
      *
-     * @param callable $function
+     * @param callable|\Closure $function
      * @param array $args
-     *
      * @return Collection
      */
     public function each(\Closure $function, array $args = [])
@@ -213,10 +214,11 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetSet($offset, $value)
     {
-        if ($this->mutable) {
-            return parent::offsetSet($offset, $value);
+        if (!$this->mutable) {
+            throw new \BadMethodCallException('Cannot set on an immutable Collection');
         }
-        throw new \BadMethodCallException('Cannot set on an immutable Collection');
+
+        parent::offsetSet($offset, $value);
     }
 
     /**
@@ -228,10 +230,11 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetUnset($offset)
     {
-        if ($this->mutable) {
-            return parent::offsetUnset($offset);
+        if (!$this->mutable) {
+            throw new \BadMethodCallException('Cannot unset an immutable Collection value');
         }
-        throw new \BadMethodCallException('Cannot unset an immutable Collection value');
+
+        parent::offsetUnset($offset);
     }
 
     /**
@@ -245,7 +248,7 @@ class Collection extends \ArrayObject implements Monadic
      * to be respectively less than, equal to, or greater than the second.
      *
      * @param Collection $other
-     * @param Closure Optional function to compare values
+     * @param \Closure $function optional function to compare values
      *
      * @return Collection
      */
@@ -260,6 +263,9 @@ class Collection extends \ArrayObject implements Monadic
 
     /**
      * @deprecated - use vIntersect
+     * @param Collection $other
+     * @param \Closure $function
+     * @return Collection
      */
     public function intersect(Collection $other, \Closure $function = null)
     {
@@ -276,7 +282,7 @@ class Collection extends \ArrayObject implements Monadic
      * to be respectively less than, equal to, or greater than the second.
      *
      * @param Collection $other
-     * @param callable $function Optional function to compare values
+     * @param callable|\Closure $function Optional function to compare values
      *
      * @return Collection
      */
@@ -299,7 +305,7 @@ class Collection extends \ArrayObject implements Monadic
      * to be respectively less than, equal to, or greater than the second.
      *
      * @param Collection $other
-     * @param callable $function Optional function to compare values
+     * @param \Closure $function Optional function to compare values
      *
      * @return Collection
      */
@@ -375,13 +381,13 @@ class Collection extends \ArrayObject implements Monadic
     /**
      * Set  the collection to be mutable.  Use with care!
      *
-     * @param bool $flag
+     * @param bool $mutable
      *
      * @return $this
      */
-    public function setMutable($flag = true)
+    public function setMutable($mutable = true)
     {
-        $this->mutable = (bool) $flag;
+        $this->mutable = (bool) $mutable;
 
         return $this;
     }
@@ -474,13 +480,13 @@ class Collection extends \ArrayObject implements Monadic
                                 $this->setType($v);
                                 return new Some($v);
                             })
-                            ->any(function ($v) {
+                            ->any(function () {
                                 return new None();
 
                             });
                     }
                 )
-                ->any(function ($v) {
+                ->any(function () {
                     return new None();
                 })
         );
@@ -492,7 +498,8 @@ class Collection extends \ArrayObject implements Monadic
     }
 
     /**
-     * @param array $value
+     * @param array $values
+     *
      * @return FTry
      */
     protected function setValue(array $values)
@@ -520,12 +527,10 @@ class Collection extends \ArrayObject implements Monadic
         if ($value instanceof Monadic && !$value instanceof Collection) {
             return $value->bind($function, $args);
         }
-        if ($value instanceof \Closure) {
-            $val = $value();
-        } else {
-            $val = $value;
-        }
+
+        $val = ($value instanceof \Closure ? $value() : $value);
         array_unshift($args, $val);
+
         return call_user_func_array($function, $args);
     }
 }

@@ -30,7 +30,7 @@ class None extends Option
      *
      * @param mixed $value Ignored
      *
-     * @return AbstractMonad
+     * @return None
      */
     public static function create($value = null)
     {
