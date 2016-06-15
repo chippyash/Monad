@@ -130,6 +130,7 @@
 
 *  You can unset a mutable collection member
 *  You can set a mutable collection member
+*  Calling one of the underlaying collection methods returns a mutable collection
 
 ## 
       Monad\Test\None

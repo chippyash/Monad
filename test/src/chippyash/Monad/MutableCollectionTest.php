@@ -36,4 +36,12 @@ class MutableCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo', 'bar', 'bop'], $this->sut->toArray());
     }
 
+    /**
+     * Simple test to ensure that we get back a MutableCollection as a result
+     * of calling an underlaying Collection method as they all use `new static(...)`
+     */
+    public function testCallingOneOfTheUnderlayingCollectionMethodsReturnsAMutableCollection()
+    {
+        $this->assertInstanceOf('Monad\MutableCollection', $this->sut->flip());
+    }
 }
