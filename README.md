@@ -376,11 +376,9 @@ if (!isset($c[6]) {
 Although the Collection implements the ArrayAccess interface, trying to set or unset 
 a value `$mCollection[0] = 'foo'` or `unset($mCollection[0])` *will* throw an 
 exception, as Collections are *immutable* by default.  In some circumstances, you
-may want to change this.  Use the `setMutable()` method to allow mutability. Use
-`setMutable(false)` to turn it off again, which you should do before returning the
-Collection to any client, as that will expect it to be immutable.
+may want to change this.  Use the MutableCollection to allow mutability. 
  
-As usual, this is not really a problem, as you can bind() on a Collection to return
+As usual, this is not really a problem, as you can bind() or use each() on a Collection to return
   another Collection, (which can contain values of a different type.)  Wherever possible, 
   I've expressed the Collection implementation in terms of Match statements, not only 
   because it usually means tighter code, but as something that you can look at 
@@ -441,7 +439,7 @@ of function passed in as a paramter.
 - the filter() method. Acts just like array_filter, but returns a new Collection as a 
 result of the reduction.
 
-Note that you can change the base type of a resultant Collection as a result these 
+Note that you can change the base type of a resultant Collection as a result of these 
 mapping methods().
 
 I chose Collection as the name as it doesn't clash with `list` which is a PHP reserved name.
@@ -494,7 +492,7 @@ Install [Composer](https://getcomposer.org/)
 #### For production
 
 <pre>
-    "chippyash/monad": "~1.2.0"
+    "chippyash/monad": "~1.3.0"
 </pre>
 
 Or to use the latest, possibly unstable version:
@@ -597,3 +595,5 @@ V1.2.5 move from coveralls to codeclimate
 V1.2.6 Add link to packages
 
 V1.2.7 Code cleanup - verify PHP7 compatibility
+
+V1.3.0 Collection is immutable. Added MutableCollection for convenience 

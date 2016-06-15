@@ -104,33 +104,19 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException BadMethodCallException
      */
-    public function testYouCannotUnsetACollectionMemberByDefault()
+    public function testYouCannotUnsetACollectionMember()
     {
         Collection::create([1,2,3])->offsetUnset(2);
-    }
-
-    public function testYouCanUnsetACollectionMemberIfYouSetTheMutableFlag()
-    {
-        $s1 = Collection::create([1,2,3])->setMutable();
-        unset($s1[2]);
-        $this->assertEquals([1,2], $s1->toArray());
     }
 
     /**
      * @expectedException BadMethodCallException
      */
-    public function testYouCannotSetACollectionMemberByDefault()
+    public function testYouCannotSetACollectionMember()
     {
         Collection::create([1,2,3])->offsetSet(2, 6);
     }
-
-    public function testYouCanSetACollectionMemberIfMutableFlagIsSet()
-    {
-        $s1 = Collection::create([1,2,3])->setMutable();
-        $s1[2] = 6;
-        $this->assertEquals([1, 2, 6], $s1->toArray());
-    }
-
+    
     public function testYouCanGetACollectionMemberAsAnArrayOffset()
     {
         $sut = Collection::create([1,2,3]);

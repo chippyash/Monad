@@ -29,11 +29,6 @@ class Collection extends \ArrayObject implements Monadic
     protected $type;
 
     /**
-     * @var bool
-     */
-    private $mutable = false;
-
-    /**
      * Constructor
      *
      * If you do not specify $type, it will be inferred from the first item in the
@@ -94,24 +89,33 @@ class Collection extends \ArrayObject implements Monadic
     public function bind(\Closure $function, array $args = [])
     {
         $res = $this->callFunction($function, $this, $args);
-        return $res instanceof Collection ? $res : new static(is_array($res)? $res :[$res]);
+        
+        return ($res instanceof Collection ? $res : new static(is_array($res)? $res :[$res]));
     }
 
     /**
-     * Monadic Interface
+     * For each item in the collection apply the function and return a new collection
      *
      * @param callable|\Closure $function
      * @param array $args
+     *
      * @return Collection
      */
     public function each(\Closure $function, array $args = [])
     {
-        $result = [];
-        foreach ($this as $key => $value) {
-            $result[$key] = $this->callFunction($function, $value, $args);
-        }
-
-        return new static($result);
+        $content = $this->getArrayCopy();
+        
+        return new static(
+            \array_combine(
+                \array_keys($content),
+                \array_map(
+                    function ($value) use ($function, $args) {
+                        return $this->callFunction($function, $value, $args);
+                    },
+                    \array_values($content)
+                )
+            )
+        );
     }
 
     /**
@@ -151,12 +155,7 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function flip()
     {
-        $new = (new static([], $this->type))->setMutable();
-        foreach ($this as $k => $v) {
-            $new[$v] = $k;
-        }
-
-        return $new->setMutable(false);
+        return new static(\array_flip($this->getArrayCopy()));
     }
 
     /**
@@ -214,11 +213,7 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetSet($offset, $value)
     {
-        if (!$this->mutable) {
-            throw new \BadMethodCallException('Cannot set on an immutable Collection');
-        }
-
-        parent::offsetSet($offset, $value);
+        throw new \BadMethodCallException('Cannot set on an immutable Collection');
     }
 
     /**
@@ -230,11 +225,7 @@ class Collection extends \ArrayObject implements Monadic
      */
     public function offsetUnset($offset)
     {
-        if (!$this->mutable) {
-            throw new \BadMethodCallException('Cannot unset an immutable Collection value');
-        }
-
-        parent::offsetUnset($offset);
+        throw new \BadMethodCallException('Cannot unset an immutable Collection value');
     }
 
     /**
@@ -376,20 +367,6 @@ class Collection extends \ArrayObject implements Monadic
     public function tail()
     {
         return new static(array_slice($this->getArrayCopy(), 1));
-    }
-
-    /**
-     * Set  the collection to be mutable.  Use with care!
-     *
-     * @param bool $mutable
-     *
-     * @return $this
-     */
-    public function setMutable($mutable = true)
-    {
-        $this->mutable = (bool) $mutable;
-
-        return $this;
     }
 
     /**
