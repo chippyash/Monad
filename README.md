@@ -119,7 +119,7 @@ $id = new Identity('foo');
 $id = Identity::create('foo');
 
 $fConcat = function($value, $fudge){return $value . $fudge};
-$concat = $id->bind($fConcat, ['bar])
+$concat = $id->bind($fConcat, ['bar'])
              ->bind($fConcat, ['baz']);
 
 echo $concat->value();      //'foobarbaz'
@@ -156,7 +156,7 @@ function doSomethingWithAnOption(Option $opt) {
 
 }
 
-$someOption = Option::create('foo);
+$someOption = Option::create('foo');
 $noneOption = Option::create();
 
 $one = doSomethingWithAnOption($someOption);
@@ -169,7 +169,7 @@ Under normal circumstances, Option uses the `null` value to determine whether or
  alternative test value as a second parameter to create()
  
 <pre>
-$mySome = Option:;create(true, false);
+$mySome = Option::create(true, false);
 $myNone = Option::create(false, false);
 </pre>
 
