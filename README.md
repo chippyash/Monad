@@ -384,6 +384,15 @@ As usual, this is not really a problem, as you can bind() or use each() on a Col
   because it usually means tighter code, but as something that you can look at 
   (and criticise hopefully!) by example.
 
+You can append to a Collection, returning a new Collection
+
+<pre>
+$s1 = new Collection([1,2,3]);
+$s2 = $s1->append(4);
+//or
+$s2 = $s1->append(['foo'=>4]);
+</pre>
+
 You can get the difference of two collections:
 
 <pre>
@@ -448,6 +457,25 @@ still behave as an array.
 
 A secondary design consideration, is that you should be able to use Collection 
 oblivious of that fact that it is a Monad, except that it is type specific.
+
+#### Map
+
+A Map is a simple extension of a Collection that requires its entries to have a string (hash)
+ key. It obeys all the rules of a Collection except that 
+ 
+<pre>
+use Monad/Map;
+
+$m1 = new Map(['foo']);
+</pre>
+
+will not work, but
+
+<pre>
+$m1 = new Map(['foo'=>'bar']);
+</pre>
+
+will work.  You can as usual, specify the type as a second parameter.
  
 ## Further documentation
 
@@ -597,3 +625,7 @@ V1.2.6 Add link to packages
 V1.2.7 Code cleanup - verify PHP7 compatibility
 
 V1.3.0 Collection is immutable. Added MutableCollection for convenience 
+
+V1.4.0 Add Map class - enforced string type keys for collection members
+
+       Add convenience method append() to Collection === ->vUnion(new Collection([$nValue]))

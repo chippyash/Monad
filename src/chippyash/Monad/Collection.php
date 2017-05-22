@@ -9,16 +9,16 @@
 
 namespace Monad;
 
+use ArrayObject;
 use Monad\FTry\Success;
 use Monad\FTry\Failure;
-use Monad\FTry;
 use Monad\Option\None;
 use Monad\Option\Some;
 
 /**
  * Key value pair collection object
  */
-class Collection extends \ArrayObject implements Monadic
+class Collection extends ArrayObject implements Monadic
 {
 
     /**
@@ -367,6 +367,21 @@ class Collection extends \ArrayObject implements Monadic
     public function tail()
     {
         return new static(array_slice($this->getArrayCopy(), 1));
+    }
+
+    /**
+     * Append value and return a new collection
+     *
+     * Value will be forced into an array if not already one
+     *
+     * @param mixed $value
+     *
+     * @return Collection
+     */
+    public function append($value)
+    {
+        $nValue = (is_array($value) ? $value : [$value]);
+        return $this->vUnion(new static($nValue));
     }
 
     /**

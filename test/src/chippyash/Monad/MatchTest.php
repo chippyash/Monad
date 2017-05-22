@@ -152,6 +152,7 @@ class MatchTest extends \PHPUnit_Framework_TestCase
 
     public function anyMatchData()
     {
+        date_default_timezone_set('UTC');
         return [
             [2],
             ['foo'],

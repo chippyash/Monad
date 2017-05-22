@@ -1,8 +1,6 @@
 # Chippyash Monad
 
-## 
-      Monad\test\Failure
-    
+## Monad\test\Failure
 
 *  Can construct if value is exception
 *  Create creates a failure if value is exception
@@ -11,9 +9,7 @@
 *  Calling pass will throw an exception
 *  Calling is success will return false
 
-## 
-      Monad\test\Success
-    
+## Monad\test\Success
 
 *  You can construct a success if you have a value for it
 *  You cannot construct a success with an exception
@@ -22,9 +18,7 @@
 *  You can get a value from a success
 *  Calling is success will return true
 
-## 
-      Monad\Test\Collection
-    
+## Monad\Test\Collection
 
 *  You can construct a collection with a non empty array
 *  You cannot construct a collection with null values
@@ -65,10 +59,9 @@
 *  You can reference a collection as though it was an array
 *  Value method proxies to collection get array copy method
 *  You can flip a collection
+*  Appending to a collection returns a new collection
 
-## 
-      Monad\Test\FTry
-    
+## Monad\Test\FTry
 
 *  Creating an f try with a non exception will return a success
 *  Creating an f try with an exception will return a failure
@@ -76,9 +69,7 @@
 *  Get or else will return f try value if option is a success
 *  Get or else will return else value if f try is a failure
 
-## 
-      Monad\Test\Identity
-    
+## Monad\Test\Identity
 
 *  You can create an identity statically
 *  Creating an identity with an identity parameter will return the parameter
@@ -89,9 +80,15 @@
 *  Binding on an identity with a closure value will evaluate the value
 *  You can flatten an identity value to its base type
 
-## 
-      Monad\Test\Match
-    
+## Monad\Test\Map
+
+*  You cannot create an empty map
+*  Maps require string keys
+*  You can construct an empty map if you pass a type
+*  Appending to a map returns a new map
+*  Appending to a map with unhashed values throws an exception
+
+## Monad\Test\Match
 
 *  Construction requires a value to match against
 *  You can construct via static on factory method
@@ -109,9 +106,7 @@
 *  You can nest matches
 *  You can test for equality
 
-## 
-      Monad\Test\Monad
-    
+## Monad\Test\Monad
 
 *  You can return a value when monad created with simple value
 *  You can return a value when monad created with monadic value
@@ -124,17 +119,13 @@
 *  Calling magic invoke will throw exception if no method is executable
 *  You cannot create an abstract monad statically
 
-## 
-      Monad\Test\MutableCollection
-    
+## Monad\Test\MutableCollection
 
 *  You can unset a mutable collection member
 *  You can set a mutable collection member
 *  Calling one of the underlaying collection methods returns a mutable collection
 
-## 
-      Monad\Test\None
-    
+## Monad\Test\None
 
 *  You can construct a none
 *  You can construct a none with a parameter and it will still be none
@@ -142,9 +133,7 @@
 *  Binding a none returns a none
 *  Calling get on a none throws a runtime exception
 
-## 
-      Monad\Test\Some
-    
+## Monad\Test\Some
 
 *  You can construct a some if you have a value for it
 *  You cannot construct a some with no value
@@ -152,9 +141,7 @@
 *  Binding on a some may return a some or a none
 *  Binding on a some takes a third nonetest value
 
-## 
-      Monad\Test\Option
-    
+## Monad\Test\Option
 
 *  You cannot construct an option directly
 *  Creating with a value returns a some
