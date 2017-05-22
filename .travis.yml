@@ -18,7 +18,7 @@ php:
 # use the $DB env variable to determine the phpunit.xml to use
 before_script:
   # - echo "extension = gmp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - composer install --dev --no-interaction
+  - composer install --no-interaction
   - mkdir -p build/logs
 
 script:
