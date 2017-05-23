@@ -1,9 +1,6 @@
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
 #possible workaround for https://github.com/composer/composer/issues/6342
-#suggested by TravisCI support
-sudo: required
-dist: trusty
 
 # list any PHP version you want to test against
 php:
