@@ -23,6 +23,7 @@ php:
 before_script:
 #possible workaround for https://github.com/composer/composer/issues/6342
   - composer self-update 1.1.2
+  - composer --version
   - composer install --no-interaction
   - mkdir -p build/logs
 
