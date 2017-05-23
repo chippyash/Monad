@@ -18,9 +18,6 @@ php:
 # omitting "script:" will default to phpunit
 # use the $DB env variable to determine the phpunit.xml to use
 before_script:
-#possible workaround for https://github.com/composer/composer/issues/6342
-  - composer self-update 1.1.2
-  - composer --version
   - composer install --no-interaction
   - mkdir -p build/logs
 
