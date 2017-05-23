@@ -10,6 +10,8 @@
 [![Test Coverage](https://codeclimate.com/github/chippyash/Monad/badges/coverage.svg)](https://codeclimate.com/github/chippyash/Monad/coverage)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
 
+Please note: Travis and/or Composer are having issues at the current time. See [here](https://github.com/composer/composer/issues/6342). Build status will resume to normal when the issues are fixed.
+
 The above badges represent the current development branch.  As a rule, I don't push
  to GitHub unless tests, coverage and usability are acceptable.  This may not be
  true for short periods of time; on holiday, need code for some other downstream
