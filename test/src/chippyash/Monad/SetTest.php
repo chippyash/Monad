@@ -80,13 +80,55 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $setA = new Set([$a, $b]);
         $setB = new Set([$a, $c]);
 
-        $setC = $setA->vIntersect($setB);
         $test = array_map(
             function ($v) {
                 return $v->val;
             },
-            $setC->toArray()
+            $setA->vIntersect($setB)->toArray()
         );
         $this->assertEquals(['a'], $test);
+    }
+
+    public function testValueUnionWillProduceASet()
+    {
+        $a = new \stdClass();
+        $a->val = 'a';
+        $b = new \stdClass();
+        $b->val = 'b';
+        $c = new \stdClass();
+        $c->val = 'c';
+
+        $setA = new Set([$a, $b]);
+        $setB = new Set([$a, $c]);
+
+        $test = array_map(
+            function ($v) {
+                return $v->val;
+            },
+            $setA->vUnion($setB)->toArray()
+        );
+        $this->assertEquals(['a','b','c'], $test);
+    }
+
+    public function testDiffWillProduceASet()
+    {
+        $a = new \stdClass();
+        $a->val = 'a';
+        $b = new \stdClass();
+        $b->val = 'b';
+        $c = new \stdClass();
+        $c->val = 'c';
+
+        $setA = new Set([$a, $b]);
+        $setB = new Set([$a, $c]);
+
+        $test = array_map(
+            function ($v) {
+                return $v->val;
+            },
+            $setA->diff($setB)->toArray()
+        );
+
+        $this->assertEquals(['b'], $test);
     }
 }
