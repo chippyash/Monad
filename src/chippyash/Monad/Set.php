@@ -108,7 +108,7 @@ class Set extends Collection
      * @inheritdoc
      * @throws BadMethodCallException
      */
-    public function kIntersect(Collection $other, \Closure $function = null)
+    final public function kIntersect(Collection $other, \Closure $function = null)
     {
         throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
     }
@@ -117,7 +117,7 @@ class Set extends Collection
      * @inheritdoc
      * @throws BadMethodCallException
      */
-    public function kUnion(Collection $other)
+    final public function kUnion(Collection $other)
     {
         throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
     }

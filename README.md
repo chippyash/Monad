@@ -476,7 +476,39 @@ $m1 = new Map(['foo'=>'bar']);
 </pre>
 
 will work.  You can as usual, specify the type as a second parameter.
+
+#### Set
+
+A Set is a simple extension of Collection that enforces the following rules
+
+- A Set can only have unique values (of the same type)
+- A Set doesn't care about the keys, its the values that are important
+- Operations on a Set return a Set
+
+<pre>
+use Monad/Set;
+
+$setA = new Set(['a','b','c']);
+$setB = new Set(['a','c']);
+
+$setC = $setA->vIntersect($setB);
+$setD = $setA->vUnion($setB);
+$setE = $setA->diff($setB);
+$setF = $setB->diff($setA);
+</pre>
+
+As with a Collection, you can specify an empty construction value and a second type value.
+You can also append to a Set to return a new Set.
+
+Calling ->kIntersect() or ->kUnion() on a Set will throw an exception, (keys don't matter).
+All other Collection methods are supported, returning Sets where expected.
  
+The ->vIntersect(), ->vUnion() and ->diff() methods all accept a second equality function
+parameter as per Collection.  However, for  Set, if none is provided it will default
+to using a sane default, that is to casting non stringifiable values to a serialized
+hash of the value and using that for comparison.  Supply your own functions if this
+default is inadequate for your purposes.
+
 ## Further documentation
 
 Please note that what you are seeing of this documentation displayed on Github is
@@ -629,3 +661,5 @@ V1.3.0 Collection is immutable. Added MutableCollection for convenience
 V1.4.0 Add Map class - enforced string type keys for collection members
 
        Add convenience method append() to Collection === ->vUnion(new Collection([$nValue]))
+       
+V1.5.0 Add Set class
