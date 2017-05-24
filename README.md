@@ -39,6 +39,8 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
     * Failure
 * Match Monad
 * Collection Monad
+* Map Monad
+* Set Monad
 
 ## Why?
 
