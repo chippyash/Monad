@@ -2,9 +2,9 @@
 /**
  * Monad
  *
- * @author Ashley Kitson
+ * @author    Ashley Kitson
  * @copyright Ashley Kitson, 2017, UK
- * @license GPL V3+ See LICENSE.md
+ * @license   GPL V3+ See LICENSE.md
  */
 namespace Monad\Test;
 
@@ -22,13 +22,14 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
     public function testPassingInUniqueValuesAtConstructionWillCreateASet()
     {
-        $this->assertInstanceOf('Monad\Set', new Set(['a','b','c']));
+        $this->assertInstanceOf('Monad\Set', new Set(['a', 'b', 'c']));
     }
 
-    public function testPassingInNonUniqueValuesAtConstructionWillCreateASetWithUniqueValues()
+    public function testPassingInNonUniqueValuesAtConstructionWillCreateASetWithUniqueValues(
+    )
     {
-        $sut = new Set(['a','b','c','a','b','c']);
-        $this->assertEquals(['a','b','c'], $sut->toArray());
+        $sut = new Set(['a', 'b', 'c', 'a', 'b', 'c']);
+        $this->assertEquals(['a', 'b', 'c'], $sut->toArray());
     }
 
     public function testYouCanCreateSetsOfObjects()
@@ -55,7 +56,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
             },
             $sut->toArray()
         );
-        $this->assertEquals(['a','b','c'], $test);
+        $this->assertEquals(['a', 'b', 'c'], $test);
     }
 
     public function testYouCanCreateSetsOfResources()
@@ -107,7 +108,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
             },
             $setA->vUnion($setB)->toArray()
         );
-        $this->assertEquals(['a','b','c'], $test);
+        $this->assertEquals(['a', 'b', 'c'], $test);
     }
 
     public function testDiffWillProduceASet()
@@ -131,4 +132,38 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['b'], $test);
     }
+
+    public function testYouCanBindAFunctionToTheEntireSetAndReturnASet()
+    {
+        $sut = Set::create([2, 3, 4, 5, 6]);
+        //function returns a single value - converted to a collection
+        $f = function ($c) {
+            return $c[0];
+        };
+        $this->assertEquals([2], $sut->bind($f)->getArrayCopy());
+        $this->assertInstanceOf('Monad\Set', $sut->bind($f));
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage kIntersect is not a supported method for Sets
+     */
+    public function testKintersectMethodIsNotSupportedForSets()
+    {
+        $setA = Set::create([2, 3, 4, 5, 6]);
+        $setB = Set::create([2, 3, 4, 5, 6]);
+        $setA->kIntersect($setB);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage kUnion is not a supported method for Sets
+     */
+    public function testKunionMethodIsNotSupportedForSets()
+    {
+        $setA = Set::create([2, 3, 4, 5, 6]);
+        $setB = Set::create([2, 3, 4, 5, 6]);
+        $setA->kUnion($setB);
+    }
+
 }

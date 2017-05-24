@@ -171,6 +171,7 @@ class Collection extends ArrayObject implements Monadic
 
     /**
      * Return value of Monad as a base type.
+     *
      * If value === \Closure, will evaluate the function and return it's value
      * If value === \Monadic, will recurse
      *
@@ -254,6 +255,7 @@ class Collection extends ArrayObject implements Monadic
 
     /**
      * @deprecated - use vIntersect
+     *
      * @param Collection $other
      * @param \Closure $function
      * @return Collection

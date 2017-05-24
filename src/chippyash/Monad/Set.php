@@ -9,13 +9,21 @@
 
 namespace Monad;
 
+use Guzzle\Common\Exception\BadMethodCallException;
+
 /**
  * A Monadic Set
  *
  * A Set can only have unique values
+ * The keys for sets are ignored.  Only the values are important
  */
 class Set extends Collection
 {
+    /**
+     * Bad Method call error template
+     */
+    const ERR_TPL_BADM = '%s is not a supported method for Sets';
+
     /**
      * Set constructor.
      *
@@ -28,46 +36,8 @@ class Set extends Collection
         parent::__construct($value, $type);
 
         //If we passed in values then check them
-        if (!empty($value))
-        {
+        if (!empty($value)) {
             $this->exchangeArray($this->checkUniqueness($value));
-        }
-    }
-
-    /**
-     * Make sure that values are unique
-     *
-     * @param array $values Values to check
-     *
-     * @return array
-     */
-    protected function checkUniqueness(array $values)
-    {
-        try
-        {
-            $toTest = end($values);
-            reset($values);
-            (string) $toTest;
-
-            //do the simple
-            return array_values(array_unique($values));
-        }
-        catch (\Exception $e)
-        {
-            //slower but effective
-            return array_values(array_map(
-                    function ($key) use ($values)
-                    {
-                        return $values[$key];
-                    },
-                    array_keys(array_unique(array_map(
-                        function ($item)
-                        {
-                            return serialize($item);
-                        },
-                        $values
-                    ))))
-            );
         }
     }
 
@@ -82,14 +52,14 @@ class Set extends Collection
      *
      * If the comparison function is not supplied, a built in one will be used
      *
-     * @param Set $other
+     * @param Set               $other
      * @param callable|\Closure $function Optional function to compare values
      *
      * @return Set
      */
     public function vIntersect(Collection $other, \Closure $function = null)
     {
-        $function = (is_null($function) ? $this->equalityFunction(): $function);
+        $function = (is_null($function) ? $this->equalityFunction() : $function);
 
         return parent::vIntersect($other, $function);
     }
@@ -105,16 +75,90 @@ class Set extends Collection
      *
      * If the comparison function is not supplied, a built in one will be used
      *
-     * @param Set $other
+     * @param Set      $other
      * @param \Closure $function optional function to compare values
      *
      * @return Set
      */
     public function diff(Collection $other, \Closure $function = null)
     {
-        $function = (is_null($function) ? $this->equalityFunction(): $function);
+        $function = (is_null($function) ? $this->equalityFunction() : $function);
 
         return parent::diff($other, $function);
+    }
+
+    /**
+     * Bind monad with function.  Function is in form f($value){}
+     * You can pass additional parameters in the $args array in which case your
+     * function should be in the form f($value, $arg1, ..., $argN)
+     *
+     * @param \Closure $function
+     * @param array $args additional arguments to pass to function
+     *
+     * @return Set
+     */
+    public function bind(\Closure $function, array $args = [])
+    {
+        $res = $this->callFunction($function, $this, $args);
+
+        return ($res instanceof Set ? $res : new static(is_array($res)? $res :[$res]));
+    }
+
+    /**
+     * @inheritdoc
+     * @throws BadMethodCallException
+     */
+    public function kIntersect(Collection $other, \Closure $function = null)
+    {
+        throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
+    }
+
+    /**
+     * @inheritdoc
+     * @throws BadMethodCallException
+     */
+    public function kUnion(Collection $other)
+    {
+        throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
+    }
+
+
+    /**
+     * Make sure that values are unique
+     *
+     * @param array $values Values to check
+     *
+     * @return array
+     */
+    protected function checkUniqueness(array $values)
+    {
+        try {
+            $toTest = end($values);
+            reset($values);
+            (string) $toTest;
+
+            //do the simple
+            return array_values(array_unique($values));
+        } catch (\Exception $e) {
+            //slower but effective
+            return array_values(
+                array_map(
+                    function ($key) use ($values) {
+                        return $values[$key];
+                    },
+                    array_keys(
+                        array_unique(
+                            array_map(
+                                function ($item) {
+                                    return serialize($item);
+                                },
+                                $values
+                            )
+                        )
+                    )
+                )
+            );
+        }
     }
 
     /**
@@ -124,10 +168,8 @@ class Set extends Collection
      */
     private function equalityFunction()
     {
-        return function ($a, $b)
-        {
-            if (is_object($a))
-            {
+        return function ($a, $b) {
+            if (is_object($a)) {
                 $a = \serialize($a);
                 $b = \serialize($b);
             }
