@@ -166,4 +166,15 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $setA->kUnion($setB);
     }
 
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage kDiff is not a supported method for Sets
+     */
+    public function testKdiffMethodIsNotSupportedForSets()
+    {
+        $setA = Set::create([2, 3, 4, 5, 6]);
+        $setB = Set::create([2, 3, 4, 5, 6]);
+        $setA->kDiff($setB);
+    }
+
 }

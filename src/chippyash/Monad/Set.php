@@ -9,8 +9,6 @@
 
 namespace Monad;
 
-use Guzzle\Common\Exception\BadMethodCallException;
-
 /**
  * A Monadic Set
  *
@@ -65,8 +63,11 @@ class Set extends Collection
     }
 
     /**
-     * Compares this Set against another Set and returns a new Set
-     * with the values in this Set that are not present in the other collection.
+     * Compares this collection against another collection using its values for
+     * comparison and returns a new Collection with the values in this collection
+     * that are not present in the other collection.
+     *
+     * Note that keys are preserved
      *
      * If the optional comparison function is supplied it must have signature
      * function(mixed $a, mixed $b){}. The comparison function must return an integer
@@ -75,16 +76,18 @@ class Set extends Collection
      *
      * If the comparison function is not supplied, a built in one will be used
      *
-     * @param Set      $other
+     * @param Set $other
      * @param \Closure $function optional function to compare values
      *
      * @return Set
      */
-    public function diff(Collection $other, \Closure $function = null)
+    public function vDiff(Collection $other, \Closure $function = null)
     {
         $function = (is_null($function) ? $this->equalityFunction() : $function);
 
-        return parent::diff($other, $function);
+        return parent::vDiff(
+            $other, $function
+        );
     }
 
     /**
@@ -105,8 +108,10 @@ class Set extends Collection
     }
 
     /**
+     * Key intersection is meaningless for a set
+     *
      * @inheritdoc
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      */
     final public function kIntersect(Collection $other, \Closure $function = null)
     {
@@ -114,10 +119,23 @@ class Set extends Collection
     }
 
     /**
+     * Key union is meaningless for a set
+     *
      * @inheritdoc
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      */
     final public function kUnion(Collection $other)
+    {
+        throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
+    }
+
+    /**
+     * Key difference is meaningless for a set
+     *
+     * @inheritdoc
+     * @throws \BadMethodCallException
+     */
+    final public function kDiff(Collection $other, \Closure $function = null)
     {
         throw new \BadMethodCallException(sprintf(self::ERR_TPL_BADM, __METHOD__));
     }
@@ -132,14 +150,28 @@ class Set extends Collection
      */
     protected function checkUniqueness(array $values)
     {
+        \set_error_handler(
+            function ($errno, $errstr, $errfile, $errline) {
+                if (E_RECOVERABLE_ERROR===$errno) {
+                    throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+                }
+                return false;
+            },
+            E_RECOVERABLE_ERROR
+        );
+
         try {
+            //see if we can turn a value into a string
             $toTest = end($values);
             reset($values);
-            (string) $toTest;
+            (string) $toTest; //this will throw an exception if it fails
+            \restore_error_handler();
 
             //do the simple
             return array_values(array_unique($values));
-        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
+            \restore_error_handler();
+
             //slower but effective
             return array_values(
                 array_map(

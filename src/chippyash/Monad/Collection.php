@@ -230,8 +230,23 @@ class Collection extends ArrayObject implements Monadic
     }
 
     /**
-     * Compares this collection against another collection and returns a new Collection
-     * with the values in this collection that are not present in the other collection.
+     * @deprecated Use vDiff
+     *
+     * @param Collection $other
+     * @param \Closure $function optional function to compare values
+     *
+     * @return Collection
+     */
+    public function diff(Collection $other, \Closure $function = null)
+    {
+        return $this->vDiff($other, $function);
+    }
+
+    /**
+     * Compares this collection against another collection using its values for
+     * comparison and returns a new Collection with the values in this collection
+     * that are not present in the other collection.
+     *
      * Note that keys are preserved
      *
      * If the optional comparison function is supplied it must have signature
@@ -244,7 +259,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function diff(Collection $other, \Closure $function = null)
+    public function vDiff(Collection $other, \Closure $function = null)
     {
         if (is_null($function)) {
             return new static(\array_diff($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
@@ -252,6 +267,33 @@ class Collection extends ArrayObject implements Monadic
 
         return new static(\array_udiff($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
     }
+
+    /**
+     * Compares this collection against another collection using its keys for
+     * comparison and returns a new Collection with the values in this collection
+     * that are not present in the other collection.
+     *
+     * Note that keys are preserved
+     *
+     * If the optional comparison function is supplied it must have signature
+     * function(mixed $a, mixed $b){}. The comparison function must return an integer
+     * less than, equal to, or greater than zero if the first argument is considered
+     * to be respectively less than, equal to, or greater than the second.
+     *
+     * @param Collection $other
+     * @param \Closure $function optional function to compare values
+     *
+     * @return Collection
+     */
+    public function kDiff(Collection $other, \Closure $function = null)
+    {
+        if (is_null($function)) {
+            return new static(\array_diff_key($this->getArrayCopy(), $other->getArrayCopy()), $this->type);
+        }
+
+        return new static(\array_diff_ukey($this->getArrayCopy(), $other->getArrayCopy(), $function), $this->type);
+    }
+
 
     /**
      * @deprecated - use vIntersect
@@ -373,6 +415,7 @@ class Collection extends ArrayObject implements Monadic
 
     /**
      * Append value and return a new collection
+     * NB this uses vUnion
      *
      * Value will be forced into an array if not already one
      *
@@ -401,7 +444,6 @@ class Collection extends ArrayObject implements Monadic
             ->any(function () {
                 return FTry::with(function () {
                     return new \RuntimeException('Type must be specified by string');
-
                 });
             })
             ->value();
@@ -487,7 +529,6 @@ class Collection extends ArrayObject implements Monadic
 
         return FTry::with(function () use ($matchLegalType) {
             return $matchLegalType->value();
-
         });
     }
 

@@ -51,4 +51,37 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $orig = new Map([], 'string');
         $orig->append(['bar']);
     }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage vUnion is not a supported method for Maps
+     */
+    public function testVunionMethodIsNotSupportedForMaps()
+    {
+        $setA = Map::create(['a' =>0, 'b' => 0]);
+        $setB = Map::create(['c' =>0, 'd' => 0]);
+        $setA->vUnion($setB);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage vIntersect is not a supported method for Maps
+     */
+    public function testVintersectMethodIsNotSupportedForMaps()
+    {
+        $setA = Map::create(['a' =>0, 'b' => 0]);
+        $setB = Map::create(['c' =>0, 'd' => 0]);
+        $setA->vIntersect($setB);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage vDiff is not a supported method for Maps
+     */
+    public function testVdiffMethodIsNotSupportedForMaps()
+    {
+        $setA = Map::create(['a' =>0, 'b' => 0]);
+        $setB = Map::create(['c' =>0, 'd' => 0]);
+        $setA->vDiff($setB);
+    }
 }

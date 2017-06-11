@@ -380,11 +380,11 @@ a value `$mCollection[0] = 'foo'` or `unset($mCollection[0])` *will* throw an
 exception, as Collections are *immutable* by default.  In some circumstances, you
 may want to change this.  Use the MutableCollection to allow mutability. 
  
-As usual, this is not really a problem, as you can bind() or use each() on a Collection to return
-  another Collection, (which can contain values of a different type.)  Wherever possible, 
-  I've expressed the Collection implementation in terms of Match statements, not only 
-  because it usually means tighter code, but as something that you can look at 
-  (and criticise hopefully!) by example.
+As usual, this is not really a problem, as you can bind() or use each() on a Collection
+ to return  another Collection, (which can contain values of a different type.)  
+ Wherever possible, I've expressed the Collection implementation in terms of Match 
+ statements, not only because it usually means tighter code, but as something that 
+ you can look at (and criticise hopefully!) by example.
 
 You can append to a Collection, returning a new Collection
 
@@ -400,7 +400,8 @@ You can get the difference of two collections:
 <pre>
 $s1 = Collection::create([1, 2, 3, 6, 7]);
 $s2 = Collection::create([6,7]);
-$s3 = $s1->diff($s2);
+$s3 = $s1->vDiff($s2);  //difference on values
+$s4 = $s1->kDiff($s2);  //difference on keys
 </pre>
 
 And the intersection:
@@ -412,7 +413,7 @@ $s3 = $s1->vIntersect($s2); //intersect on values
 $s4 = $s1->kIntersect($s2); //intersect on keys
 </pre>
 
-`diff`, `vIntersect` and `kIntersect` can take a second optional Closure parameter which is used
+`uDiff`, `kDiff`, `vIntersect` and `kIntersect` can take a second optional Closure parameter which is used
 as the comparator method.
 
 You can get the union of two collections, either by value or key:
@@ -477,7 +478,9 @@ will not work, but
 $m1 = new Map(['foo'=>'bar']);
 </pre>
 
-will work.  You can as usual, specify the type as a second parameter.
+will work.  You can as usual, specify the type as a second parameter. The 
+`vUnion`, `vIntersect` and `vDiff` methods are unspecified for Maps and will throw a 
+`BadMethodCallException`.
 
 #### Set
 
@@ -495,14 +498,15 @@ $setB = new Set(['a','c']);
 
 $setC = $setA->vIntersect($setB);
 $setD = $setA->vUnion($setB);
-$setE = $setA->diff($setB);
-$setF = $setB->diff($setA);
+$setE = $setA->vDiff($setB);
 </pre>
 
 As with a Collection, you can specify an empty construction value and a second type value.
 You can also append to a Set to return a new Set.
 
-Calling ->kIntersect() or ->kUnion() on a Set will throw an exception, (keys don't matter).
+The `kUnion`, `kIntersect` and `kDiff` methods are unspecified for Maps and will throw a 
+`BadMethodCallException`.
+
 All other Collection methods are supported, returning Sets where expected.
  
 The ->vIntersect(), ->vUnion() and ->diff() methods all accept a second equality function
@@ -665,3 +669,6 @@ V1.4.0 Add Map class - enforced string type keys for collection members
        Add convenience method append() to Collection === ->vUnion(new Collection([$nValue]))
        
 V1.5.0 Add Set class
+
+V1.5.1 Add additional checking for Maps and Sets. diff() and intersect()
+deprecated, use the kDiff(), uDiff, kIntersect() and uIntersect() methods;

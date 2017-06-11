@@ -58,6 +58,12 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Collection', Collection::create(['foo']));
     }
 
+    public function testTheValueOfACollectionIsTheCollection()
+    {
+        $collection = Collection::create(['foo']);
+        $this->assertEquals($collection, $collection->value());
+    }
+
     public function testYouCanBindAFunctionToTheEntireCollectionAndReturnACollection()
     {
         $sut = Collection::create([2,3,4,5,6]);
@@ -150,31 +156,58 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testYouCanGetTheDifferenceBetweenTwoCollections()
+    public function testYouCanGetTheDifferenceOfValuesBetweenTwoCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
-        $this->assertEquals([1,2,3], $s1->diff($s2)->flatten()->toArray());
+        $this->assertEquals([1,2,3], $s1->vDiff($s2)->flatten()->toArray());
     }
 
-    public function testYouCanChainDiffMethodsToActOnArbitraryNumbersOfCollections()
+    public function testYouCanGetTheDifferenceOfKeysBetweenTwoCollections()
+    {
+        $s1 = Collection::create([1 => 0, 2 => 0, 3 => 0, 6 => 0, 7 => 0]);
+        $s2 = Collection::create([6 => 0,7 => 0]);
+        $this->assertEquals([1 => 0,2 => 0,3 => 0], $s1->kDiff($s2)->flatten()->toArray());
+    }
+
+    public function testYouCanChainVDiffMethodsToActOnArbitraryNumbersOfCollections()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
         $s3 = Collection::create([1]);
         $s4 = Collection::create([9]);
 
-        $this->assertEquals([2,3], array_values($s1->diff($s2)->diff($s3)->diff($s4)->flatten()->toArray()));
+        $this->assertEquals([2,3], array_values($s1->vDiff($s2)->vDiff($s3)->vDiff($s4)->flatten()->toArray()));
     }
 
-    public function testYouCanSupplyAnOptionalComparatorFunctionToDiffMethod()
+    public function testYouCanChainKDiffMethodsToActOnArbitraryNumbersOfCollections()
+    {
+        $s1 = Collection::create([1 => 0, 2 => 0, 3 => 0, 6 => 0, 7 => 0]);
+        $s2 = Collection::create([6 => 0, 7 => 0]);
+        $s3 = Collection::create([1 => 0]);
+        $s4 = Collection::create([9 => 0]);
+
+        $this->assertEquals([2 => 0, 3 => 0], $s1->kDiff($s2)->kDiff($s3)->kDiff($s4)->flatten()->toArray());
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToVDiffMethod()
     {
         $s1 = Collection::create([1, 2, 3, 6, 7]);
         $s2 = Collection::create([6,7]);
         $f = function($a, $b){
             return ($a<$b ? -1 : ($a>$b ? 1 : 0));
         };
-        $this->assertEquals([1,2,3], $s1->diff($s2, $f)->flatten()->toArray());
+        $this->assertEquals([1,2,3], $s1->vDiff($s2, $f)->flatten()->toArray());
+    }
+
+    public function testYouCanSupplyAnOptionalComparatorFunctionToKDiffMethod()
+    {
+        $s1 = Collection::create([1 => 0, 2 => 0, 3 => 0, 6 => 0, 7 => 0]);
+        $s2 = Collection::create([6 => 0,7 => 0]);
+        $f = function($a, $b){
+            return ($a<$b ? -1 : ($a>$b ? 1 : 0));
+        };
+        $this->assertEquals([1 => 0,2 => 0,3 => 0], $s1->kDiff($s2, $f)->flatten()->toArray());
     }
 
     public function testYouCanGetTheIntersectionOfTwoCollectionsByValue()
