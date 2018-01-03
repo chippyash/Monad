@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-PHPUnit configuration file to run chippyash\Matrix tests
+PHPUnit configuration file to run chippyash\Monad tests
 -->
 
 <!--
@@ -33,12 +33,12 @@ testSuiteLoaderFile="/path/to/StandardTestSuiteLoader.php"
          verbose="false">
 
     <testsuites>
-        <testsuite name="chippyash/Strong-Type Test Suite">
+        <testsuite name="chippyash/Monad Test Suite">
             <directory>./test/src/</directory>
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>./src</directory>
             <exclude>
                 <directory>./docs</directory>
@@ -50,6 +50,9 @@ testSuiteLoaderFile="/path/to/StandardTestSuiteLoader.php"
             </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="./build/logs/clover.xml"/>
+    </logging>
 </phpunit>
 
 
