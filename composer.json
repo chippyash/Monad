@@ -2,7 +2,7 @@
   "name": "chippyash/monad",
   "description": "Functional programming Monad support",
   "homepage": "http://zf4.biz/packages?utm_source=packagist&utm_medium=web&utm_campaign=blinks&utm_content=monad",
-  "license": "GPL 3.0",
+  "license": "GPL-3.0-or-later",
   "keywords": [
     "monad",
     "identity",

@@ -681,3 +681,5 @@ V1.5.1 Add additional checking for Maps and Sets. diff() and intersect()
 deprecated, use the kDiff(), uDiff, kIntersect() and uIntersect() methods;
 
 V1.5.2 build script update
+
+V1.5.3 update composer - forced by packagist composer.json format change
