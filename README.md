@@ -2,8 +2,6 @@
 
 ## Quality Assurance
 
-![PHP 5.4](https://img.shields.io/badge/PHP-5.4-blue.svg)
-![PHP 5.5](https://img.shields.io/badge/PHP-5.5-blue.svg)
 ![PHP 5.6](https://img.shields.io/badge/PHP-5.6-blue.svg)
 ![PHP 7](https://img.shields.io/badge/PHP-7-blue.svg)
 [![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
