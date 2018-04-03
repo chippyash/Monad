@@ -18,12 +18,8 @@ The above badges represent the current development branch.  As a rule, I don't p
  
  [Test Contract](https://github.com/chippyash/Monad/blob/master/docs/Test-Contract.md) in the docs directory.
  
-### End of life notice
-
-In March 2018, developer support will be withdrawn from this library for PHP <5.6. Older
-versions of PHP are now in such little use that the added effort of maintaining 
-compatibility is not effort effective.  See [PHP Version Stats](https://seld.be/notes/php-versions-stats-2017-1-edition)
- for the numbers.
+Please note that developer support for PHP5.4 & 5.5 was withdrawn at version 2.0.0 of this library.
+If you need support for PHP 5.4 or 5.5, please use a version`>=1,<2`
  
 ## What?
 
@@ -565,7 +561,7 @@ Install [Composer](https://getcomposer.org/)
 #### For production
 
 <pre>
-    "chippyash/monad": "~1.3.0"
+    "chippyash/monad": ">=2,<3"
 </pre>
 
 Or to use the latest, possibly unstable version:
@@ -683,3 +679,5 @@ deprecated, use the kDiff(), uDiff, kIntersect() and uIntersect() methods;
 V1.5.2 build script update
 
 V1.5.3 update composer - forced by packagist composer.json format change
+
+V2.0.0 BC Break. Support for PHP <5.6 withdrawn
