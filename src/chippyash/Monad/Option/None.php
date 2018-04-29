@@ -29,10 +29,11 @@ class None extends Option
      * Always return another instance of None
      *
      * @param mixed $value Ignored
+     * @param mixed $noneValue Ignored
      *
      * @return None
      */
-    public static function create($value = null)
+    public static function create($value = null, $noneValue = null)
     {
         return new static();
     }
