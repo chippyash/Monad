@@ -4,6 +4,8 @@
 
 ![PHP 5.6](https://img.shields.io/badge/PHP-5.6-blue.svg)
 ![PHP 7.0](https://img.shields.io/badge/PHP-7.0-blue.svg)
+![PHP 7.1](https://img.shields.io/badge/PHP-7.1-blue.svg)
+![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
 [![Test Coverage](https://codeclimate.com/github/chippyash/Monad/badges/coverage.svg)](https://codeclimate.com/github/chippyash/Monad/coverage)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
@@ -679,3 +681,5 @@ V1.5.2 build script update
 V1.5.3 update composer - forced by packagist composer.json format change
 
 V2.0.0 BC Break. Support for PHP <5.6 withdrawn
+
+V2.0.1 fixes for PHP >= 7.1
