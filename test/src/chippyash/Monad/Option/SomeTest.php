@@ -19,12 +19,17 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Option\Some', new Some('foo'));
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error_Warning
-     */
     public function testYouCannotConstructASomeWithNoValue()
     {
-        new Some();
+        try {
+            new Some();
+        } catch (\Exception $e) {
+            //php < 7.1
+            $this->assertInstanceOf("PHPUnit_Framework_Error_Warning", $e);
+        } catch (\ArgumentCountError $e) {
+            //php >= 7.1
+            $this->assertInstanceOf("ArgumentCountError", $e);
+        }
     }
 
     public function testYouCanGetAValueFromASome()
