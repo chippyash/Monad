@@ -616,20 +616,16 @@ they are wrong headed, misguided etc
 
 ## License
 
-This software library is released under the [GNU GPL V3 or later license](http://www.gnu.org/copyleft/gpl.html)
+This software library is released under the [BSD 3 Clause license](https://opensource.org/licenses/BSD-3-Clause)
 
 This software library is Copyright (c) 2015, Ashley Kitson, UK
 
 This software library contains code items that are derived from other works: 
 
-None of the contained code items breaks the overriding license, or vice versa,  as far as I can tell. 
-So as long as you stick to GPL V3+ then you are safe. If at all unsure, please seek appropriate advice.
+None of the contained code items breaks the overriding license, or vice versa,  as 
+far as I can tell.  If at all unsure, please seek appropriate advice.
 
 If the original copyright owners of the derived code items object to this inclusion, please contact the author.
-
-A commercial license is available for this software library, please contact the author. 
-It is normally free to deserving causes, but gets you around the limitation of the GPL
-license, which does not allow unrestricted inclusion of this code in commercial works.
 
 ## Thanks
 
@@ -683,3 +679,5 @@ V1.5.3 update composer - forced by packagist composer.json format change
 V2.0.0 BC Break. Support for PHP <5.6 withdrawn
 
 V2.0.1 fixes for PHP >= 7.1
+
+V2.1.0 Change of license from GPL V3 to BSD 3 Clause
