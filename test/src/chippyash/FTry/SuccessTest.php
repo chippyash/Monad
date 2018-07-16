@@ -33,6 +33,16 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\FTry\Success', $sut->bind(function(){return true;}));
     }
 
+    public function testBindingASuccessWithSomethingThatReturnsASuccessWillFlattenTheValue()
+    {
+      $sut = new Success('foo');
+      $binded = $sut->bind(function () {
+        return new Success('bar');
+      });
+      $this->assertInstanceOf('Monad\FTry\Success', $binded);
+      $this->assertEquals('bar', $binded->value());
+    }
+
     public function testBindingASuccessWithSomethingThatThrowsAnExceptionWillReturnAFailure()
     {
         $sut = new Success('foo');

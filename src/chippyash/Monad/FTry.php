@@ -37,8 +37,7 @@ abstract class FTry extends Monad
                     return new Failure($potentialException);
                 }
             } elseif ($value instanceof Monadic) {
-                //test to ensure enclosed Monad value isn't an exception
-                static::create($value->flatten());
+                return static::create($value->flatten());
             }
 
             return new Success($value);
