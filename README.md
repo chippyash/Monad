@@ -681,3 +681,6 @@ V2.0.0 BC Break. Support for PHP <5.6 withdrawn
 V2.0.1 fixes for PHP >= 7.1
 
 V2.1.0 Change of license from GPL V3 to BSD 3 Clause
+
+V2.1.1 Flatten value in the bind method of FTry, so in case the binded function 
+returns a Success, we do not end up with nested Success. PR by [josselinauguste](https://github.com/josselinauguste) 
