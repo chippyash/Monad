@@ -6,9 +6,10 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
+declare(strict_types=1);
 namespace Monad;
 
-class Match implements Monadic
+class FMatch implements Monadic
 {
     use CallFunctionAble;
     use FlattenAble;
@@ -31,13 +32,13 @@ class Match implements Monadic
 
     /**
      * Syntactic proxy for create()
-     * @see create()
-     *
      * @param mixed $value
      *
-     * @return Match
+     * @return FMatch
+     *@see create()
+     *
      */
-    public static function on($value)
+    public static function on($value): FMatch
     {
         return static::create($value);
     }
@@ -49,9 +50,9 @@ class Match implements Monadic
      * @param array $args If args[0] set, then use as concrete value or function to
      * bind onto current value
      *
-     * @return Match
+     * @return FMatch
      */
-    public function __call($method, $args)
+    public function __call($method, $args): FMatch
     {
         if ($this->isMatched) {
             return new static($this->value, $this->isMatched);
@@ -77,9 +78,9 @@ class Match implements Monadic
      *
      * @param callable|\Closure $function
      * @param array $args Optional additional arguments to function
-     * @return Match
+     * @return FMatch
      */
-    public function any(\Closure $function = null, array $args = [])
+    public function any(\Closure $function = null, array $args = []): FMatch
     {
         if ($this->isMatched) {
             return new static($this->value, $this->isMatched);
@@ -100,9 +101,9 @@ class Match implements Monadic
      * @param \Closure $function Function that is used if test is true
      * @param array $args Optional additional arguments to function
      *
-     * @return Match
+     * @return FMatch
      */
-    public function test($test, \Closure $function = null, array $args = [])
+    public function test($test, \Closure $function = null, array $args = []): FMatch
     {
         if ($this->isMatched) {
             return new static($this->value, $this->isMatched);
@@ -141,9 +142,9 @@ class Match implements Monadic
      * @param \Closure $function
      * @param array $args additional arguments to pass to function
      *
-     * @return Match
+     * @return FMatch
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): FMatch
     {
         return new static($this->callFunction($function, $this->value, $args), $this->isMatched);
     }
@@ -153,9 +154,9 @@ class Match implements Monadic
      *
      * @param mixed $value
      *
-     * @return Match
+     * @return FMatch
      */
-    public static function create($value)
+    public static function create($value): FMatch
     {
         return new static($value);
     }
@@ -164,7 +165,7 @@ class Match implements Monadic
      * @param $name
      * @return bool
      */
-    protected function matchOnNative($name)
+    protected function matchOnNative($name): bool
     {
         switch(strtolower($name)) {
             case 'string':
@@ -210,7 +211,7 @@ class Match implements Monadic
      * @param $name
      * @return bool
      */
-    protected function matchOnClassName($name)
+    protected function matchOnClassName($name): bool
     {
         $className = str_replace('_', '\\', $name);
 

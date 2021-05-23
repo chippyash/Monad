@@ -10,8 +10,9 @@
 namespace Monad\Test;
 
 use Monad\MutableCollection;
+use PHPUnit\Framework\TestCase;
 
-class MutableCollectionTest extends \PHPUnit_Framework_TestCase
+class MutableCollectionTest extends TestCase
 {
     /**
      * System Under Test
@@ -19,7 +20,7 @@ class MutableCollectionTest extends \PHPUnit_Framework_TestCase
      */
     protected $sut;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sut = new MutableCollection(['foo', 'bar', 'baz']);
     }
@@ -42,6 +43,6 @@ class MutableCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallingOneOfTheUnderlayingCollectionMethodsReturnsAMutableCollection()
     {
-        $this->assertInstanceOf('Monad\MutableCollection', $this->sut->flip());
+        $this->assertInstanceOf(MutableCollection::class, $this->sut->flip());
     }
 }

@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 /**
@@ -31,7 +31,7 @@ abstract class Monad implements Monadic
      *
      * @return Monadic
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): Monadic
     {
         return $this::create($this->callFunction($function, $this->value, $args));
     }

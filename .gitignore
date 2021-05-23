@@ -3,3 +3,5 @@ vendor*
 composer.lock
 .directory
 .idea
+.phpunit.result.cache
+build

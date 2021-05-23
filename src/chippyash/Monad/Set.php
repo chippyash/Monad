@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2017, UK
  * @license   GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 /**
@@ -55,7 +55,7 @@ class Set extends Collection
      *
      * @return Set
      */
-    public function vIntersect(Collection $other, \Closure $function = null)
+    public function vIntersect(Collection $other, \Closure $function = null): Set
     {
         $function = (is_null($function) ? $this->equalityFunction() : $function);
 
@@ -81,7 +81,7 @@ class Set extends Collection
      *
      * @return Set
      */
-    public function vDiff(Collection $other, \Closure $function = null)
+    public function vDiff(Collection $other, \Closure $function = null): Set
     {
         $function = (is_null($function) ? $this->equalityFunction() : $function);
 
@@ -100,7 +100,7 @@ class Set extends Collection
      *
      * @return Set
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): Set
     {
         $res = $this->callFunction($function, $this, $args);
 
@@ -148,30 +148,17 @@ class Set extends Collection
      *
      * @return array
      */
-    protected function checkUniqueness(array $values)
+    protected function checkUniqueness(array $values): array
     {
-        \set_error_handler(
-            function ($errno, $errstr, $errfile, $errline) {
-                if (E_RECOVERABLE_ERROR===$errno) {
-                    throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-                }
-                return false;
-            },
-            E_RECOVERABLE_ERROR
-        );
-
         try {
             //see if we can turn a value into a string
             $toTest = end($values);
             reset($values);
             (string) $toTest; //this will throw an exception if it fails
-            \restore_error_handler();
 
             //do the simple
             return array_values(array_unique($values));
-        } catch (\ErrorException $e) {
-            \restore_error_handler();
-
+        } catch (\Throwable $e) {
             //slower but effective
             return array_values(
                 array_map(
@@ -198,7 +185,7 @@ class Set extends Collection
      *
      * @return \Closure
      */
-    private function equalityFunction()
+    private function equalityFunction(): \Closure
     {
         return function ($a, $b) {
             if (is_object($a)) {

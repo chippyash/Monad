@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad\Option;
 
 use Monad\Option;
@@ -33,7 +33,7 @@ class None extends Option
      *
      * @return None
      */
-    public static function create($value = null, $noneValue = null)
+    public static function create($value = null, $noneValue = null): None
     {
         return new static();
     }
@@ -46,7 +46,7 @@ class None extends Option
      *
      * @return None
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): None
     {
         return new static();
     }

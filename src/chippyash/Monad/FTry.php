@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 use Monad\FTry\Success;
@@ -24,7 +24,7 @@ abstract class FTry extends Monad
      *
      * @return Failure|Success
      */
-    public static function create($value)
+    public static function create($value): FTry
     {
         if ($value instanceof \Exception) {
             return new Failure($value);
@@ -53,7 +53,7 @@ abstract class FTry extends Monad
      * @param mixed $value
      * @return Failure|Success
      */
-    public static function with($value)
+    public static function with($value): FTry
     {
         return static::create($value);
     }
@@ -79,5 +79,5 @@ abstract class FTry extends Monad
      *
      * @return bool
      */
-    abstract public function isSuccess();
+    abstract public function isSuccess(): bool;
 }

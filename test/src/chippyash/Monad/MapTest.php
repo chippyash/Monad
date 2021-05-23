@@ -9,30 +9,27 @@
 namespace Monad\Test;
 
 use Monad\Map;
+use PHPUnit\Framework\TestCase;
 
-class MapTest extends \PHPUnit_Framework_TestCase
+class MapTest extends TestCase
 {
-    /**
-     * @expectedException RuntimeException
-     */
     public function testYouCannotCreateAnEmptyMap()
     {
+        $this->expectException(\RuntimeException::class);
         new Map();
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage value is not a hashed array
-     */
     public function testMapsRequireStringKeys()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('value is not a hashed array');
         new Map(['a','b']);
     }
 
     public function testYouCanConstructAnEmptyMapIfYouPassAType()
     {
-        $this->assertInstanceOf('Monad\Map', new Map([], 'string'));
-        $this->assertInstanceOf('Monad\Map', new Map([], 'Monad\Identity'));
+        $this->assertInstanceOf(Map::class, new Map([], 'string'));
+        $this->assertInstanceOf(Map::class, new Map([], 'Monad\Identity'));
     }
 
     public function testAppendingToAMapReturnsANewMap()
@@ -42,44 +39,36 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $new->toArray());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage value is not a hashed array
-     */
     public function testAppendingToAMapWithUnhashedValuesThrowsAnException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('value is not a hashed array');
         $orig = new Map([], 'string');
         $orig->append(['bar']);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage vUnion is not a supported method for Maps
-     */
     public function testVunionMethodIsNotSupportedForMaps()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('vUnion is not a supported method for Maps');
         $setA = Map::create(['a' =>0, 'b' => 0]);
         $setB = Map::create(['c' =>0, 'd' => 0]);
         $setA->vUnion($setB);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage vIntersect is not a supported method for Maps
-     */
     public function testVintersectMethodIsNotSupportedForMaps()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('vIntersect is not a supported method for Maps');
         $setA = Map::create(['a' =>0, 'b' => 0]);
         $setB = Map::create(['c' =>0, 'd' => 0]);
         $setA->vIntersect($setB);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage vDiff is not a supported method for Maps
-     */
     public function testVdiffMethodIsNotSupportedForMaps()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('vDiff is not a supported method for Maps');
         $setA = Map::create(['a' =>0, 'b' => 0]);
         $setB = Map::create(['c' =>0, 'd' => 0]);
         $setA->vDiff($setB);

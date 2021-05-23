@@ -14,14 +14,11 @@ testSuiteLoaderFile="/path/to/StandardTestSuiteLoader.php"
          backupGlobals="true"
          backupStaticAttributes="false"
          bootstrap="../vendor/autoload.php"
-         cacheTokens="false"
          colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
-         printerClass="PHPUnit_TextUI_ResultPrinter"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
@@ -36,19 +33,19 @@ testSuiteLoaderFile="/path/to/StandardTestSuiteLoader.php"
      ! The <filter> element and its children can be used to configure the
      ! blacklist and whitelist for the code coverage reporting.
      !-->
-    <filter>
-        <whitelist>
-            <directory>../src</directory>
-            <exclude>
-                <directory>../docs</directory>
-                <directory>../examples</directory>
-                <directory>../test</directory>
-                <directory>../vendor</directory>
-                <!-- don't cover interfaces -->
-                <directory>../src/chippyash/Monad/Interfaces</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<!--    <filter>-->
+<!--        <whitelist>-->
+<!--            <directory>../src</directory>-->
+<!--            <exclude>-->
+<!--                <directory>../docs</directory>-->
+<!--                <directory>../examples</directory>-->
+<!--                <directory>../test</directory>-->
+<!--                <directory>../vendor</directory>-->
+<!--                &lt;!&ndash; don't cover interfaces &ndash;&gt;-->
+<!--                <directory>../src/chippyash/Monad/Interfaces</directory>-->
+<!--            </exclude>-->
+<!--        </whitelist>-->
+<!--    </filter>-->
 
 </phpunit>
 

@@ -2,10 +2,7 @@
 
 ## Quality Assurance
 
-![PHP 5.6](https://img.shields.io/badge/PHP-5.6-blue.svg)
-![PHP 7.0](https://img.shields.io/badge/PHP-7.0-blue.svg)
-![PHP 7.1](https://img.shields.io/badge/PHP-7.1-blue.svg)
-![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
+![PHP 8.0](https://img.shields.io/badge/PHP-8.0-blue.svg)
 [![Build Status](https://travis-ci.org/chippyash/Monad.svg?branch=master)](https://travis-ci.org/chippyash/Monad)
 [![Test Coverage](https://codeclimate.com/github/chippyash/Monad/badges/coverage.svg)](https://codeclimate.com/github/chippyash/Monad/coverage)
 [![Code Climate](https://codeclimate.com/github/chippyash/Monad/badges/gpa.svg)](https://codeclimate.com/github/chippyash/Monad)
@@ -18,8 +15,11 @@ The above badges represent the current development branch.  As a rule, I don't p
  
  [Test Contract](https://github.com/chippyash/Monad/blob/master/docs/Test-Contract.md) in the docs directory.
  
-Please note that developer support for PHP5.4 & 5.5 was withdrawn at version 2.0.0 of this library.
+Developer support for PHP5.4 & 5.5 was withdrawn at version 2.0.0 of this library.
 If you need support for PHP 5.4 or 5.5, please use a version`>=1,<2`
+
+Developer support for PHP <8 was withdrawn at version 3.0.0 of this library.
+If you need support for PHP 7.x, please use a version`>=2,<3`
  
 ## What?
 
@@ -27,7 +27,7 @@ Provides a Monadic type
 
 According to my mentor, Monads are either difficult to explain or difficult to code, 
 i.e. you can say `how` or `what` but not at the same time. If
-you need further illumination, start with [wikipedia](http://en.wikipedia.org/wiki/Monad_\(functional_programming\))
+you need further illumination, start with [wikipedia](https://en.wikipedia.org/wiki/Monad_(functional_programming))
 
 ### Types supported
 
@@ -40,7 +40,7 @@ you need further illumination, start with [wikipedia](http://en.wikipedia.org/wi
 * FTry Monad
     * Success
     * Failure
-* Match Monad
+* FMatch Monad
 * Collection Monad
 * Map Monad
 * Set Monad
@@ -52,10 +52,10 @@ The difference is the buzzword of `functional programming`. PHP can support this
 paradigm, and this library introduces some basic monadic types. Indeed, learning
 functional programming practices can make solutions in PHP far more robust. 
 
-Much of the power of monadic types comes through the use of the functional Match, 
+Much of the power of monadic types comes through the use of the functional FMatch, 
 Try and For Comprehension language constructs.  PHP doesn't have these. This library provides:
 
-- Match
+- FMatch
 - FTry
 - FFor This is provided in the [Assembly-Builder package](https://github.com/chippyash/Assembly-Builder)
  
@@ -211,9 +211,9 @@ of wrapping a PHP transaction in a Try - Catch block:
  
 <pre>
 use Monad\FTry;
-use Monad\Match;
+use Monad\FMatch;
 
-Match::on(FTry::with($myFunction($initialValue())))
+FMatch::on(FTry::with($myFunction($initialValue())))
     ->Monad_FTry_Success(function ($v) {doSomethingGood($v);})
     ->Monad_FTry_Failure(
         function (\Exception $e) {
@@ -250,17 +250,20 @@ $try = FTry::with($myFunction());
 if (!$try->isSuccess()) $try->pass();
 </pre>
 
-#### Match
+#### FMatch
 
-The Match Monad allows you to carry out type pattern matching to create powerful and 
+The FMatch Monad allows you to carry out type pattern matching to create powerful and 
 dynamic functional equivalents of `case statements`.
+
+'Match' is a reserved word since PHP8. Thus for V3 of this library, I've
+renamed Match to FMatch.
 
 The basic syntax is
 
 <pre>
-use Monad\Match;
+use Monad\FMatch;
 
-$result = Match::on($initialValue)
+$result = FMatch::on($initialValue)
             ->test()
             ->test()
             ->value();
@@ -269,17 +272,17 @@ $result = Match::on($initialValue)
 where test() can be the name of a native PHP type or the name of a class, e.g.:
 
 <pre>
-$result = Match::on($initialValue)
+$result = FMatch::on($initialValue)
             ->string()
             ->Monad_Option()
             ->Monad_Identity()
             ->value()
 </pre>
 
-You can use the Match::any() method to catch anything not matched by a specific matcher:
+You can use the FMatch::any() method to catch anything not matched by a specific matcher:
 
 <pre>
-$result = Match::on($initialValue)
+$result = FMatch::on($initialValue)
             ->string()
             ->int()
             ->any()
@@ -289,11 +292,11 @@ $result = Match::on($initialValue)
 You can provide a concrete value as a parameter to each test, or a function. e.g.
 
 <pre>
-$result = Match::on($initialValue)
+$result = FMatch::on($initialValue)
               ->string('foo')
               ->Monad_Option(
                   function ($v) {
-                      return Match::on($v)
+                      return FMatch::on($v)
                           ->Monad_Option_Some(function ($v) {
                               return $v->value();
                           })
@@ -312,7 +315,7 @@ $result = Match::on($initialValue)
               ->value();
 </pre>
 
-You can find this being tested in MatchTest::testYouCanNestMatches()
+You can find this being tested in FMatchTest::testYouCanNestFMatches()
 
 ##### Supported native type matches
 
@@ -385,7 +388,7 @@ may want to change this.  Use the MutableCollection to allow mutability.
  
 As usual, this is not really a problem, as you can bind() or use each() on a Collection
  to return  another Collection, (which can contain values of a different type.)  
- Wherever possible, I've expressed the Collection implementation in terms of Match 
+ Wherever possible, I've expressed the Collection implementation in terms of FMatch 
  statements, not only because it usually means tighter code, but as something that 
  you can look at (and criticise hopefully!) by example.
 
@@ -599,14 +602,14 @@ that does one thing - the thing you are trying to debug. Use that as your start 
 - be mindful of value() and flatten(), the former gets the immediate Monad value, the
 latter gives you a PHP fundamental.
 
-- when constructing Matches, ensure the value contained in the Match conforms to the
-type you are expecting.  Remember, Match returns a Match with a value. And yes, I've
+- when constructing FMatches, ensure the value contained in the FMatch conforms to the
+type you are expecting.  Remember, FMatch returns a FMatch with a value. And yes, I've
 tripped up on this myself.
 
 - keep running the other tests. Seems simple, but in the headlong pursuit of your
 single objective, it's easy to forget that the library is interdependent (and will 
  become increasingly so as we are able to wrap new functionality back into the original
- code. e.g. Collection is dependent on Match: when FFor is implemented, Match will change.)
+ code. e.g. Collection is dependent on FMatch: when FFor is implemented, FMatch will change.)
  Run the whole test suite on a regular basis. That way you catch anything that has broken
  upstream functionality.  This library will be complete when it, as far as possible,
  expresses itself in terms of itself!
@@ -683,4 +686,6 @@ V2.0.1 fixes for PHP >= 7.1
 V2.1.0 Change of license from GPL V3 to BSD 3 Clause
 
 V2.1.1 Flatten value in the bind method of FTry, so in case the binded function 
-returns a Success, we do not end up with nested Success. PR by [josselinauguste](https://github.com/josselinauguste) 
+returns a Success, we do not end up with nested Success. PR by [josselinauguste](https://github.com/josselinauguste)
+
+V3.0.0 BC Break. Support for PHP <8 withdrawn. Match renamed to FMatch.
