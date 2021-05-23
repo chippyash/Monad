@@ -95,7 +95,7 @@
 *  ✓ Vintersect method is not supported for maps
 *  ✓ Vdiff method is not supported for maps
 
-## Monad\Test\Match
+## Monad\Test\FMatch
 
 *  ✓ Construction requires a value to match against
 *  ✓ You can construct via static on factory method

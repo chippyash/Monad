@@ -564,7 +564,7 @@ Install [Composer](https://getcomposer.org/)
 #### For production
 
 <pre>
-    "chippyash/monad": ">=2,<3"
+    "chippyash/monad": "~3.0"
 </pre>
 
 Or to use the latest, possibly unstable version:
@@ -621,7 +621,7 @@ they are wrong headed, misguided etc
 
 This software library is released under the [BSD 3 Clause license](https://opensource.org/licenses/BSD-3-Clause)
 
-This software library is Copyright (c) 2015, Ashley Kitson, UK
+This software library is Copyright (c) 2015,2021 Ashley Kitson, UK
 
 This software library contains code items that are derived from other works: 
 

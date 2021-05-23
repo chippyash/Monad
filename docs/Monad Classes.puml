@@ -34,7 +34,7 @@ class Some {
     bind(Closure:function, array:args = [], mixed:noneValue=null):Some|None
 }
 
-class Match {
+class FMatch {
     #mixed:value
     #bool:isMatched
     __construct(mixed:value, bool:isMatched)
@@ -75,7 +75,7 @@ class Collection <<ArrayAccess, IteratorAggregate, Countable>> {
 }
 
 Monadic <-- Monad
-Monadic <-- Match
+Monadic <-- FMatch
 Monadic <-- Collection
 Monad <-- Identity
 Monad <-- Option
