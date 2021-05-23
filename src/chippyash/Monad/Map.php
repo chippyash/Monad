@@ -6,6 +6,7 @@
  * @copyright Ashley Kitson, 2017, UK
  * @license GPL V3+ See LICENSE.md
  */
+declare(strict_types=1);
 namespace Monad;
 
 /**
@@ -53,7 +54,7 @@ class Map extends Collection
      * @return Collection
      * @throws \InvalidArgumentException
      */
-    public function append($value)
+    public function append($value): Map
     {
         if (!is_array($value)) {
             throw new \InvalidArgumentException('Appended value must be array');
@@ -99,7 +100,7 @@ class Map extends Collection
      *
      * @return bool
      */
-    protected function checkHash(array $value)
+    protected function checkHash(array $value): bool
     {
         return array_reduce(
             array_keys($value),

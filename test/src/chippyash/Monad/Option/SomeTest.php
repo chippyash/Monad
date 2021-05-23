@@ -9,14 +9,15 @@
 
 namespace Monad\Test;
 
-use Monad\Option\Some;
 use Monad\Option\None;
+use Monad\Option\Some;
+use PHPUnit\Framework\TestCase;
 
-class SomeTest extends \PHPUnit_Framework_TestCase
+class SomeTest extends TestCase
 {
     public function testYouCanConstructASomeIfYouHaveAValueForIt()
     {
-        $this->assertInstanceOf('Monad\Option\Some', new Some('foo'));
+        $this->assertInstanceOf(Some::class, new Some('foo'));
     }
 
     public function testYouCannotConstructASomeWithNoValue()
@@ -39,14 +40,14 @@ class SomeTest extends \PHPUnit_Framework_TestCase
 
     public function testBindingOnASomeMayReturnASomeOrANone()
     {
-        $this->assertInstanceOf('Monad\Option\Some', (new Some('foo'))->bind(function($value){return $value;}));
-        $this->assertInstanceOf('Monad\Option\None', (new Some('foo'))->bind(function($value){return null;}));
+        $this->assertInstanceOf(Some::class, (new Some('foo'))->bind(function($value){return $value;}));
+        $this->assertInstanceOf(None::class, (new Some('foo'))->bind(function($value){return null;}));
     }
 
     public function testBindingOnASomeTakesAThirdNonetestValue()
     {
         $sut = new Some('foo');
-        $this->assertInstanceOf('Monad\Option\Some', $sut->bind(function($value){return true;}, [], false));
-        $this->assertInstanceOf('Monad\Option\None', $sut->bind(function($value){return false;}, [], false));
+        $this->assertInstanceOf(Some::class, $sut->bind(function($value){return true;}, [], false));
+        $this->assertInstanceOf(None::class, $sut->bind(function($value){return false;}, [], false));
     }
 }

@@ -10,27 +10,27 @@
 namespace Monad\test;
 
 
+use Monad\FTry\Failure;
 use Monad\FTry\Success;
+use PHPUnit\Framework\TestCase;
 
-class SuccessTest extends \PHPUnit_Framework_TestCase
+class SuccessTest extends TestCase
 {
     public function testYouCanConstructASuccessIfYouHaveAValueForIt()
     {
-        $this->assertInstanceOf('Monad\FTry\Success', new Success('foo'));
+        $this->assertInstanceOf(Success::class, new Success('foo'));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testYouCannotConstructASuccessWithAnException()
     {
+        $this->expectException(\RuntimeException::class);
         new Success(new \Exception());
     }
 
     public function testBindingASuccessWithSomethingThatDoesNotThrowAnExceptionWillReturnSuccess()
     {
         $sut = new Success('foo');
-        $this->assertInstanceOf('Monad\FTry\Success', $sut->bind(function(){return true;}));
+        $this->assertInstanceOf(Success::class, $sut->bind(function(){return true;}));
     }
 
     public function testBindingASuccessWithSomethingThatReturnsASuccessWillFlattenTheValue()
@@ -39,14 +39,14 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
       $binded = $sut->bind(function () {
         return new Success('bar');
       });
-      $this->assertInstanceOf('Monad\FTry\Success', $binded);
+      $this->assertInstanceOf(Success::class, $binded);
       $this->assertEquals('bar', $binded->value());
     }
 
     public function testBindingASuccessWithSomethingThatThrowsAnExceptionWillReturnAFailure()
     {
         $sut = new Success('foo');
-        $this->assertInstanceOf('Monad\FTry\Failure', $sut->bind(function(){throw new \Exception();}));
+        $this->assertInstanceOf(Failure::class, $sut->bind(function(){throw new \Exception();}));
     }
 
     public function testYouCanGetAValueFromASuccess()

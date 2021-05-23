@@ -10,52 +10,48 @@
 namespace Monad\Test;
 
 use Monad\Collection;
+use Monad\Monad;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
     public function testYouCanConstructACollectionWithANonEmptyArray()
     {
-        $this->assertInstanceOf('Monad\Collection', new Collection(['foo']));
+        $this->assertInstanceOf(Collection::class, new Collection(['foo']));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testYouCannotConstructACollectionWithNullValues()
     {
-        $this->assertInstanceOf('Monad\Collection', new Collection([null]));
+        $this->expectException(\RuntimeException::class);
+        $this->assertInstanceOf(Collection::class, new Collection([null]));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testYouCannotConstructACollectionWithAnEmptyArrayAndNoTypeSpecified()
     {
+        $this->expectException(\RuntimeException::class);
         new Collection([]);
     }
 
     public function testYouCanConstructAnEmptyCollectionIfYouPassAType()
     {
-        $this->assertInstanceOf('Monad\Collection', new Collection([], 'string'));
-        $this->assertInstanceOf('Monad\Collection', new Collection([], 'Monad\Identity'));
+        $this->assertInstanceOf(Collection::class, new Collection([], 'string'));
+        $this->assertInstanceOf(Collection::class, new Collection([], Monad::class));
     }
 
     public function testWhenConstructingACollectionYouMustHaveSameTypeValues()
     {
-        $this->assertInstanceOf('Monad\Collection', new Collection(['foo','bar','baz'], 'string'));
+        $this->assertInstanceOf(Collection::class, new Collection(['foo','bar','baz'], 'string'));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testConstructingACollectionWithDissimilarTypesWillCauseAnException()
     {
+        $this->expectException(\RuntimeException::class);
         new Collection(['foo',new \StdClass(),'baz'], 'string');
     }
 
     public function testYouCanCreateACollection()
     {
-        $this->assertInstanceOf('Monad\Collection', Collection::create(['foo']));
+        $this->assertInstanceOf(Collection::class, Collection::create(['foo']));
     }
 
     public function testTheValueOfACollectionIsTheCollection()
@@ -93,7 +89,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $sut = Collection::create([2,3,4,5,6]);
         $res = $sut->each(function($v){return $v * 2;});
-        $this->assertInstanceOf('Monad\Collection', $res);
+        $this->assertInstanceOf(Collection::class, $res);
         $this->assertEquals([4,6,8,10,12], $res->getArrayCopy());
     }
 
@@ -107,19 +103,15 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ArrayIterator', Collection::create([1,2,3,4])->getIterator());
     }
 
-    /**
-     * @expectedException BadMethodCallException
-     */
     public function testYouCannotUnsetACollectionMember()
     {
+        $this->expectException(\BadMethodCallException::class);
         Collection::create([1,2,3])->offsetUnset(2);
     }
 
-    /**
-     * @expectedException BadMethodCallException
-     */
     public function testYouCannotSetACollectionMember()
     {
+        $this->expectException(\BadMethodCallException::class);
         Collection::create([1,2,3])->offsetSet(2, 6);
     }
     
@@ -142,7 +134,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s1 = Collection::create([1,2,3]);
         $s2 = Collection::create([5,6,7]);
         $s3 = Collection::create([$s1, $s2]);
-        $this->assertInstanceOf('Monad\Collection', $s3);
+        $this->assertInstanceOf(Collection::class, $s3);
     }
 
     public function testFlatteningACollectionOfCollectionsWillReturnACollection()
@@ -150,9 +142,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $s1 = Collection::create([1,2,3]);
         $s2 = Collection::create([5,6,7]);
         $flattened = Collection::create([$s1, $s2])->flatten();
-        $this->assertInstanceOf('Monad\Collection', $flattened);
+        $this->assertInstanceOf(Collection::class, $flattened);
         foreach ($flattened as $value) {
-            $this->assertInstanceOf('Monad\Collection', $value);
+            $this->assertInstanceOf(Collection::class, $value);
         }
     }
 
@@ -295,19 +287,15 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testPerformingAValueUnionWithDissimilarCollectionsWillThrowAnException()
     {
+        $this->expectException(\RuntimeException::class);
         (new Collection([],'string'))->vUnion(new Collection([1]));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testPerformingAKeyUnionWithDissimilarCollectionsWillThrowAnException()
     {
+        $this->expectException(\RuntimeException::class);
         (new Collection([],'string'))->kUnion(new Collection([1]));
     }
 

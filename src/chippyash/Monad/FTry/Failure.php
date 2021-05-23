@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad\FTry;
 
 use Monad\FTry;
@@ -29,7 +29,7 @@ class Failure extends FTry
      *
      * @return Failure
      */
-    public static function create($value = null)
+    public static function create($value = null): Failure
     {
         if ($value instanceof \Exception) {
             return new static($value);
@@ -46,7 +46,7 @@ class Failure extends FTry
      *
      * @return Failure
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): Failure
     {
         return new static($this->value);
     }
@@ -67,7 +67,7 @@ class Failure extends FTry
      *
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return false;
     }

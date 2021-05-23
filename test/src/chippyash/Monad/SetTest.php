@@ -9,20 +9,19 @@
 namespace Monad\Test;
 
 use Monad\Set;
+use PHPUnit\Framework\TestCase;
 
-class SetTest extends \PHPUnit_Framework_TestCase
+class SetTest extends TestCase
 {
-    /**
-     * @expectedException RuntimeException
-     */
     public function testCreatingAnEmptySetWithNoTypeHintWillThrowAnException()
     {
+        $this->expectException(\RuntimeException::class);
         new Set([]);
     }
 
     public function testPassingInUniqueValuesAtConstructionWillCreateASet()
     {
-        $this->assertInstanceOf('Monad\Set', new Set(['a', 'b', 'c']));
+        $this->assertInstanceOf(Set::class, new Set(['a', 'b', 'c']));
     }
 
     public function testPassingInNonUniqueValuesAtConstructionWillCreateASetWithUniqueValues(
@@ -41,7 +40,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $c = new \stdClass();
         $c->val = 'c';
 
-        $this->assertInstanceOf('Monad\Set', new Set([$a, $b, $c]));
+        $this->assertInstanceOf(Set::class, new Set([$a, $b, $c]));
 
         $d = new \stdClass();
         $d->val = 'a';
@@ -49,7 +48,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $e->val = 'b';
 
         $sut = new Set([$a, $b, $c, $d, $e]);
-        $this->assertInstanceOf('Monad\Set', $sut);
+        $this->assertInstanceOf(Set::class, $sut);
         $test = array_map(
             function ($v) {
                 return $v->val;
@@ -64,7 +63,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $a = opendir(__DIR__);
         $b = opendir(__DIR__);
         $sut = new Set([$a, $b]);
-        $this->assertInstanceOf('Monad\Set', $sut);
+        $this->assertInstanceOf(Set::class, $sut);
         closedir($a);
         closedir($b);
     }
@@ -144,34 +143,28 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Monad\Set', $sut->bind($f));
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage kIntersect is not a supported method for Sets
-     */
     public function testKintersectMethodIsNotSupportedForSets()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('kIntersect is not a supported method for Sets');
         $setA = Set::create([2, 3, 4, 5, 6]);
         $setB = Set::create([2, 3, 4, 5, 6]);
         $setA->kIntersect($setB);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage kUnion is not a supported method for Sets
-     */
     public function testKunionMethodIsNotSupportedForSets()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('kUnion is not a supported method for Sets');
         $setA = Set::create([2, 3, 4, 5, 6]);
         $setB = Set::create([2, 3, 4, 5, 6]);
         $setA->kUnion($setB);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage kDiff is not a supported method for Sets
-     */
     public function testKdiffMethodIsNotSupportedForSets()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('kDiff is not a supported method for Sets');
         $setA = Set::create([2, 3, 4, 5, 6]);
         $setB = Set::create([2, 3, 4, 5, 6]);
         $setA->kDiff($setB);

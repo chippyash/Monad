@@ -10,8 +10,9 @@
 namespace Monad\Test;
 
 use Monad\Identity;
+use PHPUnit\Framework\TestCase;
 
-class IdentityTest extends \PHPUnit_Framework_TestCase
+class IdentityTest extends TestCase
 {
     /**
      * System Under Test
@@ -19,14 +20,14 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
      */
     protected $sut;
     
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sut = new Identity('foo');
     }
     
     public function testYouCanCreateAnIdentityStatically()
     {
-        $this->assertInstanceOf('Monad\Identity', Identity::create('bar'));
+        $this->assertInstanceOf(Identity::class, Identity::create('bar'));
     }
 
     public function testCreatingAnIdentityWithAnIdentityParameterWillReturnTheParameter()
@@ -37,12 +38,12 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
     public function testCreatingAnIdentityWithANonIdentityParameterWillReturnAnIdentityContainingTheParameterAsValue()
     {
         $sut = Identity::create('foo');
-        $this->assertInstanceOf('Monad\Identity', $sut);
+        $this->assertInstanceOf(Identity::class, $sut);
         $this->assertEquals('foo', $sut->value());
 
         $sut1 = Identity::create(function($a){return $a;});
-        $this->assertInstanceOf('Monad\Identity', $sut1);
-        $this->assertInstanceOf('Closure', $sut1->value());
+        $this->assertInstanceOf(Identity::class, $sut1);
+        $this->assertInstanceOf(\Closure::class, $sut1->value());
     }
 
     public function testYouCanBindAFunctionOnAnIdentity()

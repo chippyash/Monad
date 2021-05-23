@@ -10,35 +10,34 @@
 namespace Monad\Test;
 
 use Monad\Option\None;
+use PHPUnit\Framework\TestCase;
 
-class NoneTest extends \PHPUnit_Framework_TestCase
+class NoneTest extends TestCase
 {
     public function testYouCanConstructANone()
     {
-        $this->assertInstanceOf('Monad\Option\None', new None());
+        $this->assertInstanceOf(None::class, new None());
     }
 
     public function testYouCanConstructANoneWithAParameterAndItWillStillBeNone()
     {
-        $this->assertInstanceOf('Monad\Option\None', new None('foo'));
+        $this->assertInstanceOf(None::class, new None('foo'));
     }
 
     public function testCreateWillReturnANone()
     {
-        $this->assertInstanceOf('Monad\Option\None', None::create());
+        $this->assertInstanceOf(None::class, None::create());
     }
 
     public function testBindingANoneReturnsANone()
     {
         $none = new None();
-        $this->assertInstanceOf('Monad\Option\None', $none->bind(function(){}));
+        $this->assertInstanceOf(None::class, $none->bind(function(){}));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testCallingGetOnANoneThrowsARuntimeException()
     {
+        $this->expectException(\RuntimeException::class);
         None::create()->value();
     }
 }

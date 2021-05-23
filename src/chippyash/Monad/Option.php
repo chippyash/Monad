@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 use Monad\Option\None;
@@ -26,7 +26,7 @@ abstract class Option extends Monad
      *
      * @return Some|None
      */
-    public static function create($value = null, $noneValue = null)
+    public static function create($value = null, $noneValue = null): Option
     {
         if ($value === $noneValue) {
             return new None();

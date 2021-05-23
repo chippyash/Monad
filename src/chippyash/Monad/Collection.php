@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 use ArrayObject;
@@ -40,7 +40,7 @@ class Collection extends ArrayObject implements Monadic
     public function __construct(array $value = [], $type = null)
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        $setType = Match::on($type)
+        $setType = FMatch::on($type)
             ->string(function () use ($type) {
                 return $this->setType($type);
             })
@@ -51,7 +51,7 @@ class Collection extends ArrayObject implements Monadic
 
         /** @noinspection PhpUndefinedMethodInspection */
         parent::__construct(
-            Match::on($setType->value())
+            FMatch::on($setType->value())
                 ->Monad_FTry_Success(function () use ($value) {
                     return $this->setValue($value);
                 })
@@ -69,9 +69,9 @@ class Collection extends ArrayObject implements Monadic
      *
      * @param array $value
      *
-     * @return Monadic
+     * @return Collection
      */
-    public static function create($value)
+    public static function create($value): Collection
     {
         return new static($value);
     }
@@ -101,7 +101,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function each(\Closure $function, array $args = [])
+    public function each(\Closure $function, array $args = []): Collection
     {
         $content = $this->getArrayCopy();
         
@@ -142,7 +142,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function filter(\Closure $function)
+    public function filter(\Closure $function): Collection
     {
         return new static(\array_filter($this->getArrayCopy(), $function));
     }
@@ -153,7 +153,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function flip()
+    public function flip(): Collection
     {
         return new static(\array_flip($this->getArrayCopy()));
     }
@@ -164,7 +164,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function value()
+    public function value(): Collection
     {
         return $this;
     }
@@ -177,11 +177,11 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function flatten()
+    public function flatten(): Collection
     {
         $ret = [];
         foreach ($this as $key => $value) {
-            $ret[$key] = Match::on($value)
+            $ret[$key] = FMatch::on($value)
                 ->Closure(function ($v) {
                     return $v();
                 })
@@ -199,7 +199,7 @@ class Collection extends ArrayObject implements Monadic
      * Return collection as an array
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->getArrayCopy();
     }
@@ -237,7 +237,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function diff(Collection $other, \Closure $function = null)
+    public function diff(Collection $other, \Closure $function = null): Collection
     {
         return $this->vDiff($other, $function);
     }
@@ -347,7 +347,7 @@ class Collection extends ArrayObject implements Monadic
     public function kIntersect(Collection $other, \Closure $function = null)
     {
         return new static(
-            Match::on(Option::create($function))
+            FMatch::on(Option::create($function))
                 ->Monad_Option_Some(function () use ($other, $function) {
                     return \array_intersect_ukey($this->getArrayCopy(), $other->getArrayCopy(), $function);
                 })
@@ -398,7 +398,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function head()
+    public function head(): Collection
     {
         return new static(array_slice($this->getArrayCopy(), 0, 1));
     }
@@ -408,7 +408,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return Collection
      */
-    public function tail()
+    public function tail(): Collection
     {
         return new static(array_slice($this->getArrayCopy(), 1));
     }
@@ -434,9 +434,9 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return FTry
      */
-    protected function setType($type)
+    protected function setType($type): FTry
     {
-        return Match::on($type)
+        return FMatch::on($type)
             ->string(function ($type) {
                 $this->type = $type;
                 return FTry::with($type);
@@ -454,7 +454,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return FTry
      */
-    protected function setTypeFromValue(array $value)
+    protected function setTypeFromValue(array $value): FTry
     {
         //required to be defined as a var so it can be called in next statement
         $basicTest = function () use ($value) {
@@ -472,7 +472,7 @@ class Collection extends ArrayObject implements Monadic
         //@var Option
         //NB - this separate declaration is not needed, but is provided only to
         // allow some separation between what can become a complex match pattern
-        $type = Match::on($firstValue)
+        $type = FMatch::on($firstValue)
             ->Monad_Option_Some(
                 function ($option) {
                     return Option::create(gettype($option->value()));
@@ -487,11 +487,11 @@ class Collection extends ArrayObject implements Monadic
         //MatchLegalType requires to be defined separately as it is used twice
         //in the next statement
         $matchLegalType = FTry::with(
-            Match::on($type)
+            FMatch::on($type)
                 ->Monad_Option_None()
                 ->Monad_Option_Some(
                     function ($v) use ($firstValue) {
-                        Match::on($v->value())
+                        FMatch::on($v->value())
                             ->test('object', function ($v) use ($firstValue) {
                                 $this->setType(get_class($firstValue->value()));
                                 return new Some($v);
@@ -537,7 +537,7 @@ class Collection extends ArrayObject implements Monadic
      *
      * @return FTry
      */
-    protected function setValue(array $values)
+    protected function setValue(array $values): FTry
     {
         foreach ($values as $key => $value) {
             if (($this->type !== gettype($value)) && (!$value instanceof $this->type)) {
@@ -555,7 +555,7 @@ class Collection extends ArrayObject implements Monadic
      * @param mixed $value
      * @param array $args additional arguments to pass to function
      *
-     * @return Monadic
+     * @return mixed
      */
     protected function callFunction(\Closure $function, $value, array $args = [])
     {

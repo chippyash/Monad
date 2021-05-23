@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad;
 
 /**
@@ -21,7 +21,7 @@ trait CallFunctionAble
      * @param mixed $value
      * @param array $args additional arguments to pass to function
      *
-     * @return Monadic
+     * @return mixed
      */
     protected function callFunction(\Closure $function, $value, array $args = [])
     {

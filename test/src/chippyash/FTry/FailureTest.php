@@ -11,38 +11,37 @@ namespace Monad\test;
 
 
 use Monad\FTry\Failure;
+use PHPUnit\Framework\TestCase;
 
-class FailureTest extends \PHPUnit_Framework_TestCase
+class FailureTest extends TestCase
 {
     public function testCanConstructIfValueIsException()
     {
-        $this->assertInstanceOf('Monad\FTry\Failure', new Failure(new \Exception()));
+        $this->assertInstanceOf(Failure::class, new Failure(new \Exception()));
     }
 
     public function testCreateCreatesAFailureIfValueIsException()
     {
-        $this->assertInstanceOf('Monad\FTry\Failure', Failure::create(new \Exception()));
+        $this->assertInstanceOf(Failure::class, Failure::create(new \Exception()));
     }
 
     public function testCreateCreatesAFailureIfValueIsNotAnException()
     {
-        $this->assertInstanceOf('Monad\FTry\Failure', Failure::create('foo'));
+        $this->assertInstanceOf(Failure::class, Failure::create('foo'));
     }
 
     public function testBindReturnsFailureWithSameValue()
     {
         $exc = new \Exception();
         $fail =  Failure::create($exc);
-        $this->assertInstanceOf('Monad\FTry\Failure', $fail);
-        $this->assertInstanceOf('Monad\FTry\Failure', $fail->bind(function(){}));
+        $this->assertInstanceOf(Failure::class, $fail);
+        $this->assertInstanceOf(Failure::class, $fail->bind(function(){}));
         $this->assertEquals($exc, $fail->bind(function(){})->value());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testCallingPassWillThrowAnException()
     {
+        $this->expectException(\RuntimeException::class);
         Failure::create('foo')->pass();
     }
 

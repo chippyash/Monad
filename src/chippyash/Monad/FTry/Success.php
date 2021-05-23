@@ -6,7 +6,7 @@
  * @copyright Ashley Kitson, 2015, UK
  * @license GPL V3+ See LICENSE.md
  */
-
+declare(strict_types=1);
 namespace Monad\FTry;
 
 use Monad\FTry;
@@ -35,7 +35,7 @@ class Success extends FTry
      *
      * @return Success|Failure
      */
-    public function bind(\Closure $function, array $args = [])
+    public function bind(\Closure $function, array $args = []): FTry
     {
         try {
             return FTry::create($this->callFunction($function, $this->value, $args));
@@ -49,7 +49,7 @@ class Success extends FTry
      *
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return true;
     }

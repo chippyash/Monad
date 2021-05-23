@@ -10,12 +10,15 @@
 namespace Monad\Test;
 
 use Monad\Option;
+use Monad\Option\None;
+use Monad\Option\Some;
+use PHPUnit\Framework\TestCase;
 
-class OptionTest extends \PHPUnit_Framework_TestCase
+class OptionTest extends TestCase
 {
     public function testYouCannotConstructAnOptionDirectly()
     {
-        $refl = new \ReflectionClass('Monad\Option');
+        $refl = new \ReflectionClass(Option::class);
         $this->assertNull($refl->getConstructor());
         $this->assertTrue($refl->isAbstract());
     }
@@ -23,23 +26,23 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     public function testCreatingWithAValueReturnsASome()
     {
         $sut = Option::create('foo');
-        $this->assertInstanceOf('Monad\Option\Some', $sut);
+        $this->assertInstanceOf(Some::class, $sut);
     }
 
     public function testCreatingWithNoValueOrNullReturnsANone()
     {
         $sut = Option::create();
-        $this->assertInstanceOf('Monad\Option\None', $sut);
+        $this->assertInstanceOf(None::class, $sut);
         $sut = Option::create(null);
-        $this->assertInstanceOf('Monad\Option\None', $sut);
+        $this->assertInstanceOf(None::class, $sut);
     }
 
     public function testYouCanReplaceNoneTestByCallingCreateWithAdditionalParameter()
     {
         $sut = Option::create(true, false);
-        $this->assertInstanceOf('Monad\Option\Some', $sut);
+        $this->assertInstanceOf(Some::class, $sut);
         $sut1 = Option::create(false, false);
-        $this->assertInstanceOf('Monad\Option\None', $sut1);
+        $this->assertInstanceOf(None::class, $sut1);
     }
 
     public function testGetOrElseWillReturnOptionValueIfOptionIsASome()

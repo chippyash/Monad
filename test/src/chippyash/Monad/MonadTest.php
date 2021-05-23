@@ -10,8 +10,10 @@
 namespace Monad\Test;
 
 use Monad\Monad;
+use Monad\Monadic;
+use PHPUnit\Framework\TestCase;
 
-class MonadTest extends \PHPUnit_Framework_TestCase
+class MonadTest extends TestCase
 {
     /**
      * System Under Test
@@ -19,9 +21,9 @@ class MonadTest extends \PHPUnit_Framework_TestCase
      */
     protected $sut;
     
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->sut = $this->getMockForAbstractClass('Monad\Monad');
+        $this->sut = $this->getMockForAbstractClass(Monad::class);
     }
 
     public function testYouCanReturnAValueWhenMonadCreatedWithSimpleValue()
@@ -34,13 +36,13 @@ class MonadTest extends \PHPUnit_Framework_TestCase
     {
         $bound = $this->createMonadWithValue('foo');
         $this->setSutValue($bound);
-        $this->assertInstanceOf('Monad\Monadic', $this->sut->value());
+        $this->assertInstanceOf(Monadic::class, $this->sut->value());
     }
 
     public function testYouCanUseAClosureForValue()
     {
         $this->setSutValue(function(){return 'foo';});
-        $this->assertInstanceOf('Closure', $this->sut->value());
+        $this->assertInstanceOf(\Closure::class, $this->sut->value());
     }
 
     public function testFlattenWillReturnBaseType()
@@ -91,18 +93,16 @@ class MonadTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $sut());
     }
 
-    /**
-     * @expectedException BadMethodCallException
-     */
     public function testCallingMagicInvokeWillThrowExceptionIfNoMethodIsExecutable()
     {
+        $this->expectException(\BadMethodCallException::class);
         $sut = $this->sut;
         $sut('foo');
     }
 
     public function testYouCannotCreateAnAbstractMonadStatically()
     {
-        $refl = new \ReflectionClass('\Monad\Monad');
+        $refl = new \ReflectionClass(Monad::class);
         $this->assertNull($refl->getConstructor());
     }
 
@@ -125,7 +125,7 @@ class MonadTest extends \PHPUnit_Framework_TestCase
      */
     private function createMonadWithValue($value)
     {
-        $monad = $this->getMockForAbstractClass('Monad\Monad');
+        $monad = $this->getMockForAbstractClass(Monad::class);
         $refl = new \ReflectionProperty($monad, 'value');
         $refl->setAccessible(true);
         $refl->setValue($monad, $value);
